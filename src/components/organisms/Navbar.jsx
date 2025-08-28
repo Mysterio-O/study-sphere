@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import logo from '../../assets/logo.webp';
 import useAuth  from '../../hooks/useAuth';
 import ThemeSwitch from '../../shared/ThemeSwitch';
+import Button from '../atoms/Button';
 
 // Navigation links for Navbar
 const navLinks = [
@@ -45,12 +46,6 @@ const mobileMenuVariants = {
     scaleY: 0,
     transition: { duration: 0.3, ease: 'easeInOut' },
   },
-};
-
-// Button animation
-const buttonVariants = {
-  hover: { scale: 1.05, transition: { duration: 0.2 } },
-  tap: { scale: 0.95 },
 };
 
 // Hamburger icon component
@@ -135,26 +130,20 @@ function Navbar() {
             ))}
             <ThemeSwitch />
             {user ? (
-              <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonVariants}
+              <Button
+                variant="outline"
+                size="md"
                 onClick={userLogOut}
-                style={{ backgroundColor: '#EA4335', color: '#FFFFFF' }} // error
-                className="px-4 py-2 rounded-md hover:bg-[#C5221F] dark:hover:bg-[#FCA5A5] transition-colors"
               >
                 Logout
-              </motion.button>
+              </Button>
             ) : (
-              <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonVariants}
-                style={{ backgroundColor: '#4285F4', color: '#FFFFFF' }} // primary
-                className="px-4 py-2 rounded-md hover:bg-[#3367D6] dark:hover:bg-[#8AB4F8] transition-colors"
+              <Button
+                variant="primary"
+                text='SignIn'
               >
-                <Link to="/auth">Login</Link>
-              </motion.button>
+                <Link to="/auth"></Link>
+              </Button>
             )}
           </div>
 
@@ -193,31 +182,27 @@ function Navbar() {
                 </NavLink>
               ))}
               {user ? (
-                <motion.button
-                  whileHover="hover"
-                  whileTap="tap"
-                  variants={buttonVariants}
+                <Button
+                  variant="error"
+                  size="md"
                   onClick={() => {
                     userLogOut();
                     toggleMobileMenu();
                   }}
-                  style={{ backgroundColor: '#EA4335', color: '#FFFFFF' }} // error
-                  className="w-full text-left py-3 px-4 rounded-md hover:bg-[#C5221F] dark:hover:bg-[#FCA5A5] transition-colors mt-2"
+                  className="w-full text-left mt-2"
                 >
                   Logout
-                </motion.button>
+                </Button>
               ) : (
-                <motion.button
-                  whileHover="hover"
-                  whileTap="tap"
-                  variants={buttonVariants}
-                  style={{ backgroundColor: '#4285F4', color: '#FFFFFF' }} // primary
-                  className="w-full text-left py-3 px-4 rounded-md hover:bg-[#3367D6] dark:hover:bg-[#8AB4F8] transition-colors mt-2"
+                <Button
+                  variant="primary"
+                  size="md"
+                  className="w-full text-left mt-2"
                 >
                   <Link to="/auth" onClick={toggleMobileMenu}>
                     Login
                   </Link>
-                </motion.button>
+                </Button>
               )}
             </motion.div>
           )}

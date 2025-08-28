@@ -5,7 +5,7 @@ import Navbar from '../components/organisms/Navbar';
 
 const RootLayout = () => {
     return (
-        <div className='bg-[#FFFFFF] dark:bg-[#0F172A] transition-colors duration-300'>
+        <div className='bg-[#FFFFFF] dark:bg-[#0F172A] transition-colors duration-300 roboto'>
             <Scroll />
             <div className='max-w-[1600px] mx-auto'>
                 <div className='sticky top-0 z-[50]'>
