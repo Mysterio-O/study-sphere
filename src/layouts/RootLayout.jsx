@@ -1,6 +1,7 @@
 import React from 'react';
 import Scroll from '../pages/Scroll/Scroll';
 import { Outlet } from 'react-router';
+import Navbar from '../components/organisms/Navbar';
 
 const RootLayout = () => {
     return (
@@ -8,8 +9,7 @@ const RootLayout = () => {
             <Scroll />
             <div className='max-w-[1600px] mx-auto'>
                 <div className='sticky top-0 z-[50]'>
-                    {/* <Navbar /> */}
-                    {/* place your navbar here */}
+                    <Navbar />
                 </div>
                 <section>
                     <Outlet />
