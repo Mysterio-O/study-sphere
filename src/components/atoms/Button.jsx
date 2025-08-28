@@ -1,48 +1,52 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import PropTypes from 'prop-types';
 
-const Button = ({ variant, type, text, onclick, }) => {
-
-
-    const buttonVariants = {
-        primary: 'bg-[#4285F4] dark:bg-[#8AB4F8] hover:text-white dark:hover:text-black',
-        secondary: 'bg-[#34A853] dark:bg-[#6EE7B7] hover:text-white dark:hover:text-black',
-        sec_light: 'bg-[#E6F4EA] dark:bg-[#064E3B] hover:text-[#34A853] dark:hover:text-[#E6F4EA]',
-        outline: "bg-[#F8F9FA] dark:bg-[#1F2937] border-0 outline-2 outline-[#4285F4] dark:outline-[#8AB4F8] hover:text-[#4285F4]",
-        error: 'bg-[#EA4335] dark:bg-[#FCA5A5] hover:bg-[#C5221F] dark:hover:bg-[#DC2626]'
-    }
-
-
+const Button = ({ variant = 'primary', type = 'button', text, onClick, className = '' }) => {
     const animationVariants = {
         initial: { scale: 0.85, opacity: 0 },
         view: { scale: 1, opacity: 1 },
-        hover: { scale: 1.1 },
-        tap: { scale: 0.95 },
-        timing: { duration: 0.3, ease: "easeInOut" }
-    }
+        hover: { scale: 1.05, y: -2, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' },
+        tap: { scale: 0.95, y: 0 },
+    };
 
+    const variantClass = {
+        primary: 'bg-[#4285F4] dark:bg-[#8AB4F8] text-[#FFFFFF] dark:text-[#F9FAFB] hover:bg-[#3367D6] dark:hover:bg-[#3367D6] border-transparent',
+        secondary: 'bg-[#34A853] dark:bg-[#6EE7B7] text-[#FFFFFF] dark:text-[#F9FAFB] hover:bg-[#0F9D58] dark:hover:bg-[#0F9D58] border-[#34A853] dark:border-[#6EE7B7]',
+        sec_light: 'bg-[#E6F4EA] dark:bg-[#064E3B] text-[#202124] dark:text-[#E6F4EA] hover:bg-[#D1E8D6] dark:hover:bg-[#065F46] border-transparent',
+        outline: 'bg-transparent border border-[#4285F4] dark:border-[#8AB4F8] text-[#4285F4] dark:text-[#8AB4F8] hover:bg-[#E8F0FE] dark:hover:bg-[#1E3A8A]',
+        error: 'bg-[#EA4335] dark:bg-[#FCA5A5] text-[#FFFFFF] dark:text-[#F9FAFB] hover:bg-[#C5221F] dark:hover:bg-[#C5221F] border-transparent',
+    }[variant] || 'bg-[#4285F4] dark:bg-[#8AB4F8] text-[#FFFFFF] dark:text-[#F9FAFB] hover:bg-[#3367D6] border-transparent';
 
     return (
         <motion.button
             variants={animationVariants}
-            initial='initial'
-            animate='view'
-            whileHover='hover'
-            whileTap='tap'
-            transition='timing'
-            type={type && type}
-            onClick={onclick && onclick}
-            className={`btn rounded-lg text-black dark:text-white ${variant === 'primary' ? buttonVariants.primary
-                : variant === 'secondary' ? buttonVariants.secondary
-                    : variant === 'outline' ? buttonVariants.outline
-                        : variant === 'sec-light' ? buttonVariants.sec_light
-                            : variant === 'error' ? buttonVariants.error
-                                : ''
-                } transition-colors duration-300`}
+            initial="initial"
+            animate="view"
+            whileHover="hover"
+            whileTap="tap"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            type={type}
+            onClick={onClick}
+            className={`
+        px-4 py-2 rounded-lg font-roboto font-medium text-base
+        transition-all duration-300
+        focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50
+        ${variantClass}
+        ${className}
+      `}
         >
             {text}
         </motion.button>
     );
+};
+
+Button.propTypes = {
+    variant: PropTypes.oneOf(['primary', 'secondary', 'sec_light', 'outline', 'error']),
+    type: PropTypes.string,
+    text: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    className: PropTypes.string,
 };
 
 export default Button;
