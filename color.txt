@@ -1,0 +1,25 @@
+| **Category**         | **Light Mode**        | **Dark Mode**          | **Usage**                         |
+| -------------------- | --------------------- | ---------------------- | --------------------------------- |
+| **Primary**          | #4285F4 (Google Blue) | #8AB4F8 (Lighter Blue) | Buttons, links, headers           |
+| **Primary Dark**     | #3367D6               | #6B7280 (Gray)         | Hover states, active buttons      |
+| **Primary Light**    | #E8F0FE               | #1E3A8A (Dark Blue)    | Backgrounds, highlights           |
+| **Secondary**        | #34A853 (Green)       | #6EE7B7 (Light Green)  | Success states (e.g., saved task) |
+| **Secondary Dark**   | #0F9D58               | #059669                | Success button hovers             |
+| **Secondary Light**  | #E6F4EA               | #064E3B (Dark Green)   | Success backgrounds               |
+| **Accent/Warning**   | #FBBC04 (Yellow)      | #F4D03F (Light Yellow) | Priorities, alerts                |
+| **Accent Dark**      | #F9AB00               | #D97706                | Warning hovers                    |
+| **Accent Light**     | #FEF7E0               | #78350F (Dark Amber)   | Warning backgrounds               |
+| **Error**            | #EA4335 (Red)         | #FCA5A5 (Light Red)    | Errors, deletions                 |
+| **Error Dark**       | #C5221F               | #DC2626                | Error hovers                      |
+| **Error Light**      | #FCE8E6               | #7F1D1D (Dark Red)     | Error backgrounds                 |
+| **Background**       | #FFFFFF (White)       | #121212 (Dark Gray)    | Main background                   |
+| **Surface**          | #F8F9FA (Light Gray)  | #1F2937 (Darker Gray)  | Cards, modals                     |
+| **Text Primary**     | #202124 (Dark Gray)   | #F9FAFB (Near White)   | Main text                         |
+| **Text Secondary**   | #5F6368 (Medium Gray) | #D1D5DB (Light Gray)   | Subtext, labels                   |
+| **Border**           | #DADCE0               | #374151 (Gray)         | Dividers, borders                 |
+| **Shadow**           | rgba(0,0,0,0.1)       | rgba(255,255,255,0.1)  | Card shadows                      |
+| **Subject: Math**    | #4285F4 (Blue)        | #8AB4F8                | Schedule/planner color            |
+| **Subject: Science** | #34A853 (Green)       | #6EE7B7                | Schedule/planner color            |
+| **Subject: Arts**    | #EA4335 (Red)         | #FCA5A5                | Schedule/planner color            |
+| **Subject: History** | #FBBC04 (Yellow)      | #F4D03F                | Schedule/planner color            |
+
