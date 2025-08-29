@@ -16,10 +16,9 @@
 }
 
 
-/* 🌙 Dark & Light container */
-.swal-container {
+/* Base styles for regular alerts */
+.swal2-popup.swal-container {
   background-color: #ffffff !important;
-  /* light mode */
   border: 1px solid #dadce0 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
   color: #202124 !important;
@@ -27,16 +26,15 @@
   font-family: 'Roboto', sans-serif !important;
 }
 
-.dark .swal-container {
+.dark .swal2-popup.swal-container {
   background-color: #1F2937 !important;
-  /* dark surface */
   border: 1px solid #374151 !important;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
   color: #F9FAFB !important;
 }
 
-/* ✨ Title */
-.swal-title {
+/* Title styles */
+.swal2-popup .swal-title {
   font-family: 'Roboto', sans-serif !important;
   font-weight: 700 !important;
   color: #202124 !important;
@@ -44,24 +42,26 @@
   margin-bottom: 10px !important;
 }
 
-.dark .swal-title {
+.dark .swal2-popup .swal-title {
   color: #F9FAFB !important;
+  /* Light gray for visibility in dark mode */
 }
 
-/* 📝 Text */
-.swal-text {
+/* Text (content body) styles */
+.swal2-popup .swal-text {
   font-family: 'Roboto', sans-serif !important;
   color: #5F6368 !important;
   font-size: 1rem !important;
   margin-bottom: 10px !important;
 }
 
-.dark .swal-text {
+.dark .swal2-popup .swal-text {
   color: #D1D5DB !important;
+  /* Softer gray to avoid "deep white" in dark mode */
 }
 
-/* ✅ Confirm button (Primary) */
-.swal-confirm-button {
+/* Confirm button (Primary) */
+.swal2-popup .swal-confirm-button {
   background: linear-gradient(to right, #4285F4, #3367D6) !important;
   color: #ffffff !important;
   font-family: 'Roboto', sans-serif !important;
@@ -74,17 +74,27 @@
   transition: all 0.3s ease !important;
 }
 
-.swal-confirm-button:hover {
+.dark .swal2-popup .swal-confirm-button {
+  background: linear-gradient(to right, #60A5FA, #3B82F6) !important;
+  /* Lighter blue for dark mode */
+  box-shadow: 0 2px 6px rgba(96, 165, 250, 0.3) !important;
+}
+
+.swal2-popup .swal-confirm-button:hover {
   background: linear-gradient(to right, #3367D6, #202124) !important;
   transform: translateY(-2px) !important;
 }
 
-.swal-confirm-button:active {
+.dark .swal2-popup .swal-confirm-button:hover {
+  background: linear-gradient(to right, #3B82F6, #1E3A8A) !important;
+}
+
+.swal2-popup .swal-confirm-button:active {
   transform: scale(0.95) !important;
 }
 
-/* ❌ Cancel button (Error) */
-.swal-cancel-button {
+/* Cancel button (Error) */
+.swal2-popup .swal-cancel-button {
   background: linear-gradient(to right, #EA4335, #C5221F) !important;
   color: #ffffff !important;
   font-family: 'Roboto', sans-serif !important;
@@ -97,17 +107,27 @@
   transition: all 0.3s ease !important;
 }
 
-.swal-cancel-button:hover {
+.dark .swal2-popup .swal-cancel-button {
+  background: linear-gradient(to right, #F87171, #DC2626) !important;
+  /* Lighter red for dark mode */
+  box-shadow: 0 2px 6px rgba(248, 113, 113, 0.3) !important;
+}
+
+.swal2-popup .swal-cancel-button:hover {
   background: linear-gradient(to right, #C5221F, #7F1D1D) !important;
   transform: translateY(-2px) !important;
 }
 
-.swal-cancel-button:active {
+.dark .swal2-popup .swal-cancel-button:hover {
+  background: linear-gradient(to right, #DC2626, #991B1B) !important;
+}
+
+.swal2-popup .swal-cancel-button:active {
   transform: scale(0.95) !important;
 }
 
-/* ℹ️ Info button (Accent) */
-.swal-info-button {
+/* Info button (Accent) */
+.swal2-popup .swal-info-button {
   background: linear-gradient(to right, #FBBC04, #F9AB00) !important;
   color: #202124 !important;
   font-family: 'Roboto', sans-serif !important;
@@ -119,13 +139,25 @@
   transition: all 0.3s ease !important;
 }
 
-.swal-info-button:hover {
+.dark .swal2-popup .swal-info-button {
+  background: linear-gradient(to right, #FBBF24, #D97706) !important;
+  /* Lighter yellow for dark mode */
+  color: #1F2937 !important;
+  /* Darker text for contrast */
+  box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3) !important;
+}
+
+.swal2-popup .swal-info-button:hover {
   background: linear-gradient(to right, #F9AB00, #78350F) !important;
   transform: translateY(-2px) !important;
 }
 
-/* ✔️ Success button (Secondary) */
-.swal-success-button {
+.dark .swal2-popup .swal-info-button:hover {
+  background: linear-gradient(to right, #D97706, #92400E) !important;
+}
+
+/* Success button (Secondary) */
+.swal2-popup .swal-success-button {
   background: linear-gradient(to right, #34A853, #0F9D58) !important;
   color: #ffffff !important;
   font-family: 'Roboto', sans-serif !important;
@@ -137,20 +169,41 @@
   transition: all 0.3s ease !important;
 }
 
-.swal-success-button:hover {
+.dark .swal2-popup .swal-success-button {
+  background: linear-gradient(to right, #4ADE80, #16A34A) !important;
+  /* Lighter green for dark mode */
+  box-shadow: 0 2px 6px rgba(74, 222, 128, 0.3) !important;
+}
+
+.swal2-popup .swal-success-button:hover {
   background: linear-gradient(to right, #0F9D58, #064E3B) !important;
   transform: translateY(-2px) !important;
 }
 
-/* 🌀 Loading spinner */
+.dark .swal2-popup .swal-success-button:hover {
+  background: linear-gradient(to right, #16A34A, #065F46) !important;
+}
+
+/* Loading spinner */
 .swal2-loading .swal2-spinner {
   border-color: #4285F4 transparent #4285F4 transparent !important;
 }
 
-/* 🔔 Icons */
+.dark .swal2-loading .swal2-spinner {
+  border-color: #60A5FA transparent #60A5FA transparent !important;
+  /* Lighter blue for dark mode */
+}
+
+/* Icons */
 .swal2-success .swal2-icon {
   border-color: #34A853 !important;
   color: #34A853 !important;
+}
+
+.dark .swal2-success .swal2-icon {
+  border-color: #4ADE80 !important;
+  /* Lighter green for dark mode */
+  color: #4ADE80 !important;
 }
 
 .swal2-error .swal2-icon {
@@ -158,12 +211,79 @@
   color: #EA4335 !important;
 }
 
+.dark .swal2-error .swal2-icon {
+  border-color: #F87171 !important;
+  /* Lighter red for dark mode */
+  color: #F87171 !important;
+}
+
 .swal2-warning .swal2-icon {
   border-color: #FBBC04 !important;
   color: #FBBC04 !important;
 }
 
+.dark .swal2-warning .swal2-icon {
+  border-color: #FBBF24 !important;
+  /* Lighter yellow for dark mode */
+  color: #FBBF24 !important;
+}
+
 .swal2-info .swal2-icon {
   border-color: #4285F4 !important;
   color: #4285F4 !important;
+}
+
+.dark .swal2-info .swal2-icon {
+  border-color: #60A5FA !important;
+  /* Lighter blue for dark mode */
+  color: #60A5FA !important;
+}
+
+/* Toast-specific styles */
+.swal2-toast .swal2-popup.swal-container {
+  width: 360px !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+}
+
+.dark .swal2-toast .swal2-popup.swal-container {
+  background-color: #1F2937 !important;
+  border: 1px solid #374151 !important;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
+}
+
+.swal2-toast .swal-title {
+  font-size: 1.2rem !important;
+  margin-bottom: 4px !important;
+  line-height: 1.4 !important;
+}
+
+.dark .swal2-toast .swal-title {
+  color: #F9FAFB !important;
+  /* Ensure title visibility in dark mode */
+}
+
+.swal2-toast .swal-text {
+  font-size: 0.9rem !important;
+  margin-bottom: 0 !important;
+}
+
+.dark .swal2-toast .swal-text {
+  color: #D1D5DB !important;
+  /* Softer gray for content body */
+}
+
+.swal2-toast .swal2-timer-progress-bar {
+  background: #4285F4 !important;
+  height: 4px !important;
+}
+
+.dark .swal2-toast .swal2-timer-progress-bar {
+  background: #60A5FA !important;
+  /* Lighter blue for dark mode */
+}
+
+.swal2-toast {
+  margin-top: 16px !important;
+  margin-right: 16px !important;
 }

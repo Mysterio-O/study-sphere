@@ -86,9 +86,9 @@ function Navbar() {
             confirmButtonText: 'Yes, log out',
             cancelButtonText: 'Cancel',
             customClass: {
-                container: 'swal-container',
+                popup: 'swal-container', // Target .swal2-popup
                 title: 'swal-title',
-                content: 'swal-text',
+                htmlContainer: 'swal-text', // Target .swal2-html-container
                 confirmButton: 'swal-confirm-button',
                 cancelButton: 'swal-cancel-button'
             }
@@ -103,9 +103,9 @@ function Navbar() {
                             text: 'You have been successfully logged out.',
                             icon: 'success',
                             customClass: {
-                                container: 'swal-container',
+                                popup: 'swal-container', // Target .swal2-popup
                                 title: 'swal-title',
-                                content: 'swal-text',
+                                htmlContainer: 'swal-text', // Target .swal2-html-container
                                 confirmButton: 'swal-confirm-button'
                             }
                         });
@@ -117,9 +117,9 @@ function Navbar() {
                             text: 'An error occurred while logging out. Please try again.',
                             icon: 'error',
                             customClass: {
-                                container: 'swal-container',
+                                popup: 'swal-container', // Target .swal2-popup
                                 title: 'swal-title',
-                                content: 'swal-text',
+                                htmlContainer: 'swal-text', // Target .swal2-html-container
                                 confirmButton: 'swal-confirm-button'
                             }
                         });
@@ -239,7 +239,7 @@ function Navbar() {
                                     }}
                                     className="w-full text-left mt-2"
                                 >
-                                    
+
                                 </Button>
                             ) : (
                                 <Button

@@ -128,9 +128,9 @@ const SignUp = () => {
                                     title: 'Sign Up Successful',
                                     text: `Welcome, ${username}! Your account has been created.`,
                                     customClass: {
-                                        container: 'swal-container',
+                                        popup: 'swal-container', // Target .swal2-popup
                                         title: 'swal-title',
-                                        content: 'swal-text',
+                                        htmlContainer: 'swal-text', // Target .swal2-html-container
                                         confirmButton: 'swal-confirm-button'
                                     }
                                 });
@@ -148,9 +148,9 @@ const SignUp = () => {
                         title: 'Profile Update Failed',
                         text: 'There was an issue updating your profile. Please try again.',
                         customClass: {
-                            container: 'swal-container',
+                            popup: 'swal-container', // Target .swal2-popup
                             title: 'swal-title',
-                            content: 'swal-text',
+                            htmlContainer: 'swal-text', // Target .swal2-html-container
                             confirmButton: 'swal-confirm-button'
                         }
                     });
@@ -166,9 +166,9 @@ const SignUp = () => {
                 title: 'Sign Up Failed',
                 text: 'There was an issue creating your account. Please check your credentials and try again.',
                 customClass: {
-                    container: 'swal-container',
+                    popup: 'swal-container', // Target .swal2-popup
                     title: 'swal-title',
-                    content: 'swal-text',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
                     confirmButton: 'swal-confirm-button'
                 }
             });

@@ -4,14 +4,18 @@ import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import GoogleButton from '../../components/shared/GoogleButton';
 import { useNavigate } from 'react-router';
+import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const { loginUser } = useAuth();
 
-    const [formData,setFormData] = useState({
-        email:'',
-        password:''
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
     });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,6 +23,55 @@ const SignIn = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
+        const { email, password } = formData;
+        if (email && password) {
+            loginUser(email, password)
+                .then(result => {
+                    console.log('user logged in', result);
+                    setLoading(false);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Logged In Successfully',
+                        text: 'Welcome back!',
+                        customClass: {
+                            popup: 'swal-container', // Target .swal2-popup
+                            title: 'swal-title',
+                            htmlContainer: 'swal-text', // Target .swal2-html-container
+                            confirmButton: 'swal-confirm-button'
+                        }
+                    });
+                    navigate('/');
+                })
+                .catch(err => {
+                    console.error("error logging in", err);
+                    setLoading(false)
+                    Swal.fire({
+                        title: 'Login Failed',
+                        text: 'Invalid email or password. Please try again.',
+                        icon: 'error',
+                        customClass: {
+                            popup: 'swal-container', // Target .swal2-popup
+                            title: 'swal-title',
+                            htmlContainer: 'swal-text', // Target .swal2-html-container
+                            confirmButton: 'swal-confirm-button'
+                        }
+                    });
+                })
+        } else {
+            setLoading(false);
+            Swal.fire({
+                title: 'Missing Fields',
+                text: 'Please enter both email and password to log in.',
+                icon: 'warning',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        }
     };
 
     const handleNavigate = () => {
@@ -44,7 +97,7 @@ const SignIn = () => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
                 <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" />
                 <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
-                <Button variant="primary" type="submit" text="Sign In" />
+                <Button variant="primary" type="submit" text="Sign In" disabled={loading} loading={loading} />
             </form>
 
             {/* Divider */}
@@ -60,7 +113,7 @@ const SignIn = () => {
             </div>
 
             {/* Google Sign In */}
-            <GoogleButton register={false}/>
+            <GoogleButton register={false} />
 
             {/* Extra navigation options */}
             <div className="mt-6 flex flex-col items-center gap-3 w-full">
