@@ -5,6 +5,7 @@ import logo from '../../assets/logo.webp';
 import useAuth from '../../hooks/useAuth';
 import ThemeSwitch from '../../shared/ThemeSwitch';
 import Button from '../atoms/Button';
+import Swal from 'sweetalert2';
 
 // Navigation links for Navbar
 const navLinks = [
@@ -76,6 +77,57 @@ function Navbar() {
 
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+    const handleLogOut = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to log out of your account?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, log out',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                container: 'swal-container',
+                title: 'swal-title',
+                content: 'swal-text',
+                confirmButton: 'swal-confirm-button',
+                cancelButton: 'swal-cancel-button'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                userLogOut()
+                    .then(() => {
+                        console.log('user signed out successfully');
+                        Swal.fire({
+                            title: 'Logged Out',
+                            text: 'You have been successfully logged out.',
+                            icon: 'success',
+                            customClass: {
+                                container: 'swal-container',
+                                title: 'swal-title',
+                                content: 'swal-text',
+                                confirmButton: 'swal-confirm-button'
+                            }
+                        });
+                    })
+                    .catch((err) => {
+                        console.error("error logging out user", err);
+                        Swal.fire({
+                            title: 'Logout Failed',
+                            text: 'An error occurred while logging out. Please try again.',
+                            icon: 'error',
+                            customClass: {
+                                container: 'swal-container',
+                                title: 'swal-title',
+                                content: 'swal-text',
+                                confirmButton: 'swal-confirm-button'
+                            }
+                        });
+                    })
+            }
+        });
+    };
+
     return (
         <motion.nav
             initial="hidden"
@@ -130,9 +182,9 @@ function Navbar() {
                         <ThemeSwitch />
                         {user ? (
                             <Button
-                                variant="outline"
+                                variant="error"
                                 text='Log Out'
-                                onClick={userLogOut}
+                                onClick={handleLogOut}
                             />
                         ) : (
                             <Link to="/auth/signin">
@@ -180,14 +232,14 @@ function Navbar() {
                             {user ? (
                                 <Button
                                     variant="error"
-                                    size="md"
+                                    text="Logout"
                                     onClick={() => {
-                                        userLogOut();
+                                        handleLogOut();
                                         toggleMobileMenu();
                                     }}
                                     className="w-full text-left mt-2"
                                 >
-                                    Logout
+                                    
                                 </Button>
                             ) : (
                                 <Button

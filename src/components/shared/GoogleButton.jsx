@@ -1,20 +1,94 @@
 import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
+import { auth } from '../../firebase/firebase.init';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
-const GoogleButton = () => {
+const GoogleButton = ({ register }) => {
 
     const { googleLogin } = useAuth();
     const [loading, setLoading] = useState(false);
+    const axiosPublic = useAxiosPublic();
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setLoading(true);
         googleLogin()
-            .then((result) => {
+            .then(async (result) => {
                 console.log("user signed in with google", result);
+                navigate('/');
+                Swal.fire({
+                    title: 'Google Login Successful',
+                    text: 'You have successfully signed in with Google!',
+                    icon: 'success',
+                    customClass: {
+                        container: 'swal-container',
+                        title: 'swal-title',
+                        content: 'swal-text',
+                        confirmButton: 'swal-confirm-button'
+                    }
+                });
+
+                if (register) {
+                    const user = auth.currentUser;
+                    if (user !== null) {
+                        const username = user?.displayName;
+                        const email = user?.email;
+                        const photo = user?.photoURL;
+
+                        const userInfo = {
+                            username, email, photoURL: photo
+                        };
+                        const res = await axiosPublic.post('/create-user', userInfo);
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                title: 'Account Created',
+                                text: `Welcome, ${username}! Your account has been successfully created.`,
+                                icon: 'success',
+                                customClass: {
+                                    container: 'swal-container',
+                                    title: 'swal-title',
+                                    content: 'swal-text',
+                                    confirmButton: 'swal-confirm-button'
+                                }
+                            });
+                            setLoading(false);
+                            navigate('/');
+                        } else {
+                            Swal.fire({
+                                title: 'Account Creation Failed',
+                                text: 'Failed to create your account. Please try again.',
+                                icon: 'error',
+                                customClass: {
+                                    container: 'swal-container',
+                                    title: 'swal-title',
+                                    content: 'swal-text',
+                                    confirmButton: 'swal-confirm-button'
+                                }
+                            });
+                            setLoading(false)
+                        }
+
+                    }
+                }
+
+
                 setLoading(false);
             })
             .catch((err) => {
                 console.log("error signing with google", err);
+                Swal.fire({
+                    title: 'Google Login Failed',
+                    text: 'An error occurred during Google sign-in. Please try again.',
+                    icon: 'error',
+                    customClass: {
+                        container: 'swal-container',
+                        title: 'swal-title',
+                        content: 'swal-text',
+                        confirmButton: 'swal-confirm-button'
+                    }
+                });
                 setLoading(false)
             })
     }

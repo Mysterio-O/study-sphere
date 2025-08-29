@@ -60,7 +60,7 @@ const SignIn = () => {
             </div>
 
             {/* Google Sign In */}
-            <GoogleButton />
+            <GoogleButton register={false}/>
 
             {/* Extra navigation options */}
             <div className="mt-6 flex flex-col items-center gap-3 w-full">

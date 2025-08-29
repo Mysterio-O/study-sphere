@@ -5,33 +5,177 @@ import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import GoogleButton from '../../components/shared/GoogleButton';
 import FileInput from '../../components/atoms/FileInput';
+import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import Swal from 'sweetalert2';
 
 
 const SignUp = () => {
+    const { createUser, setUserProfile } = useAuth();
+    const axiosPublic = useAxiosPublic()
     const navigate = useNavigate();
     const [institutionType, setInstitutionType] = useState('School');
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         institutionName: '',
-        class: '',
+        classGrade: '',
         department: '',
         year: '',
         institutionType: '',
     });
 
+    const [passErr, setPassErr] = useState('');
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const institutionType = e.target.institutionType.value;
 
-        formData.institutionType = institutionType;
-        console.log(formData);
+        // formData.institutionType = institutionType;
+        // console.log(formData);
+
+        const { photo, password, email, username, institutionName, classGrade, department, year } = formData
+        // console.log(photo);
+
+        // validate password
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordPattern.test(password)) {
+            setPassErr(
+                "Password must be at least 8 characters long, include one uppercase, one lowercase, and one number."
+            );
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Password',
+                text: 'Password must be at least 8 characters long, include one uppercase, one lowercase, and one number.',
+                customClass: {
+                    container: 'swal-container',
+                    title: 'swal-title',
+                    content: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+            setLoading(false);
+            return; // stop form submission
+        } else {
+            setPassErr(""); // clear error if valid
+        }
+
+        // return if no photo found
+        if (!photo) {
+            setLoading(false);
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Missing Photo',
+                text: 'Please upload a profile photo to continue.',
+                customClass: {
+                    container: 'swal-container',
+                    title: 'swal-title',
+                    content: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        }
+
+        const imgData = new FormData();
+        imgData.append('image', photo);
+
+        try {
+
+            // uploading photo in imgbb
+            const uploadPhotoOnImgbb = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_SECRET}`, imgData);
+            // console.log(uploadPhotoOnImgbb);
+            const imageOptions = {
+                photoURL: uploadPhotoOnImgbb?.data?.data?.url,
+                deleteURL: uploadPhotoOnImgbb?.data?.data?.delete_url
+            }
+            console.log(imageOptions);
+
+            const userInfo = {
+                username, email, institutionType, institutionName, classGrade, department, year,
+                ...imageOptions
+            }
+
+            // create user with firebase
+            createUser(email, password)
+                .then(result => {
+                    console.log("user new account created.", result);
+
+                    const updateObject = {
+                        displayName: username,
+                        photoURL: imageOptions.photoURL
+                    }
+
+                    // update name and photo in firebase
+                    setUserProfile(updateObject)
+                        .then(async () => {
+                            console.log("user info updated in the firebase");
+
+                            // upload user info in the server
+                            const res = await axiosPublic.post('/create-user', userInfo)
+                            console.log(res.data);
+                            if (res?.data?.insertedId) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sign Up Successful',
+                                    text: `Welcome, ${username}! Your account has been created.`,
+                                    customClass: {
+                                        container: 'swal-container',
+                                        title: 'swal-title',
+                                        content: 'swal-text',
+                                        confirmButton: 'swal-confirm-button'
+                                    }
+                                });
+                            }
+                            setLoading(false);
+                            navigate('/')
+
+                        })
+
+                })
+                .catch(err => {
+                    console.error('error updating user profile', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Profile Update Failed',
+                        text: 'There was an issue updating your profile. Please try again.',
+                        customClass: {
+                            container: 'swal-container',
+                            title: 'swal-title',
+                            content: 'swal-text',
+                            confirmButton: 'swal-confirm-button'
+                        }
+                    });
+                    setLoading(false);
+                })
+
+
+        }
+        catch (err) {
+            console.error('error creating new user with credentials', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Sign Up Failed',
+                text: 'There was an issue creating your account. Please check your credentials and try again.',
+                customClass: {
+                    container: 'swal-container',
+                    title: 'swal-title',
+                    content: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+            setLoading(false);
+        }
+
+
     };
 
     const handleNavigate = () => {
@@ -55,6 +199,9 @@ const SignUp = () => {
 
                 <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" />
                 <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
+                {passErr && (
+                    <p className="text-red-500 text-sm font-medium">{passErr}</p>
+                )}
                 <div className="flex flex-col gap-2">
                     <label className="text-[#5F6368] dark:text-[#D1D5DB] text-sm font-medium">
                         Institution Type
@@ -73,7 +220,7 @@ const SignUp = () => {
                 </div>
                 <Input type="text" name="institutionName" value={formData.institutionName} onChange={handleChange} placeholder="Enter Institution Name" />
                 {institutionType === 'School' ? (
-                    <Input type="text" name="class" value={formData.class} onChange={handleChange} placeholder="Enter Class (e.g., Grade 10)" />
+                    <Input type="text" name="classGrade" value={formData.classGrade} onChange={handleChange} placeholder="Enter Class (e.g., Grade 10)" />
                 ) : (
                     <div className="flex items-center justify-center gap-4">
                         <div className="flex-1">
@@ -101,7 +248,7 @@ const SignUp = () => {
                         </div>
                     </div>
                 )}
-                <Button variant="primary" type="submit" text="Sign Up" />
+                <Button variant="primary" type="submit" text="Sign Up" disabled={loading} loading={loading} />
             </form>
             <div className="relative my-6 w-full">
                 <div className="absolute inset-0 flex items-center">
@@ -113,7 +260,7 @@ const SignUp = () => {
                     </span>
                 </div>
             </div>
-            <GoogleButton />
+            <GoogleButton register={true} />
             <div className="relative mt-5 flex justify-center text-sm">
                 <span className="px-2 bg-[#FFFFFF] dark:bg-[#1F2937] text-[#5F6368] dark:text-[#D1D5DB]">
                     Already have an account?{' '}
