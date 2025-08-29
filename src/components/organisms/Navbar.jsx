@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import ThemeSwitch from '../../shared/ThemeSwitch';
 import Button from '../atoms/Button';
 import Swal from 'sweetalert2';
+import LogoutButton from '../../shared/LogoutButton';
 
 // Navigation links for Navbar
 const navLinks = [
@@ -181,11 +182,7 @@ function Navbar() {
                         ))}
                         <ThemeSwitch />
                         {user ? (
-                            <Button
-                                variant="error"
-                                text='Log Out'
-                                onClick={handleLogOut}
-                            />
+                            <LogoutButton />
                         ) : (
                             <Link to="/auth/signin">
                                 <Button

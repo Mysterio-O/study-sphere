@@ -1,6 +1,6 @@
 import React from 'react';
-import useAuth from '../hooks/useAuth';
 import { Navigate, useLocation } from 'react-router';
+import useAuth from '../hooks/useAuth';
 // This component is used to protect routes that require authentication
 const PrivateRoute = ({ children }) => {
 
