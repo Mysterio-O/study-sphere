@@ -12,7 +12,7 @@ import animation from '../../assets/animation/add-subjects-animation.json'
 const AddSubjects = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const [inputPairs, setInputPairs] = useState([{ id: Date.now(), subjectName: '', teacherName: '' }]);
+    const [inputPairs, setInputPairs] = useState([{ id: Date.now(), subjectName: '', teacherName: '', teacherNumber: "" }]);
 
     const handleInputChange = (id, e) => {
         const { name, value } = e.target;
@@ -24,7 +24,7 @@ const AddSubjects = () => {
     };
 
     const addInputPair = () => {
-        setInputPairs([...inputPairs, { id: Date.now(), subjectName: '', teacherName: '' }]);
+        setInputPairs([...inputPairs, { id: Date.now(), subjectName: '', teacherName: '', teacherNumber:"" }]);
     };
 
     const removeInputPair = (id) => {
@@ -58,13 +58,15 @@ const AddSubjects = () => {
             subjects: inputPairs.map((pair) => ({
                 subjectName: pair.subjectName,
                 teacherName: pair.teacherName,
+                teacherNumber: pair.teacherNumber
             })),
         };
         console.log(data);
 
         try {
-            const res = await axiosSecure.post('/add-subjects', data)
-            if (res.data?.insertedId) {
+            const res = await axiosSecure.post(`/add-subjects?email=${user?.email}`, data)
+            // console.log(res);
+            if (res.data?.insertedId || res.data?.modifiedCount > 0) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Added',
@@ -122,6 +124,13 @@ const AddSubjects = () => {
                                 name="teacherName"
                                 placeholder="Enter Teacher Name"
                                 value={pair.teacherName}
+                                onChange={(e) => handleInputChange(pair.id, e)}
+                            />
+                            <Input
+                                type="number"
+                                name="teacherNumber"
+                                placeholder="Enter Teacher Number"
+                                value={pair.teacherNumber}
                                 onChange={(e) => handleInputChange(pair.id, e)}
                             />
                             <Button

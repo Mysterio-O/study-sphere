@@ -8,6 +8,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
 import Overview from "../pages/Dashboard/Overview";
 import AddSubjects from "../pages/Dashboard/AddSubjects";
+import MySubjects from "../pages/Dashboard/MySubjects";
 
 const router = createBrowserRouter([
     //  main routes
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
             {
                 path: 'add-subjects',
                 Component: AddSubjects
+            },
+            {
+                path: 'my-subjects',
+                Component: MySubjects
             }
         ]
     }

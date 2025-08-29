@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router';
-import { ChartBarIcon, PlusCircleIcon } from '@heroicons/react/24/solid';
+import { ChartBarIcon, PlusCircleIcon, UserCircleIcon, BookOpenIcon, CalendarIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
 import UserPhoto from '../../shared/UserPhoto';
 import DashboardTitle from './DashboardTitle';
 import ThemeSwitch from '../../shared/ThemeSwitch';
 import Button from '../atoms/Button';
 import LogoutButton from '../../shared/LogoutButton';
-import {motion} from 'motion/react';
+import { motion } from 'motion/react';
 
 
 const DashboardNavigation = () => {
@@ -19,10 +19,30 @@ const DashboardNavigation = () => {
             to: '/dashboard',
         },
         {
+            name: 'Profile',
+            Icon: UserCircleIcon,
+            to: '/dashboard/profile',
+        },
+        {
             name: 'Add Subjects',
             Icon: PlusCircleIcon,
             to: '/dashboard/add-subjects',
-        }
+        },
+        {
+            name: 'My Subjects',
+            Icon: BookOpenIcon,
+            to: '/dashboard/my-subjects',
+        },
+        {
+            name: 'All Schedules',
+            Icon: CalendarIcon,
+            to: '/dashboard/my-schedules',
+        },
+        {
+            name: 'Setting',
+            Icon: Cog6ToothIcon,
+            to: '/dashboard/setting',
+        },
     ];
 
     return (
@@ -40,12 +60,12 @@ const DashboardNavigation = () => {
             <main className="px-2 py-4 sticky top-0 overflow-y-auto">
                 <nav>
                     <ul className="flex flex-col gap-2">
-                        {links.map((link,idx ) => (
+                        {links.map((link, idx) => (
                             <motion.li
-                            initial={{x:-100, opacity:0}}
-                            animate={{x:0,opacity:1}}
-                            transition={{duration:0.3, delay: 0.2 * idx}}
-                            key={idx}>
+                                initial={{ x: -100, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.3, delay: 0.2 * idx }}
+                                key={idx}>
                                 <Link
                                     to={link.to}
                                     className={`flex items-center gap-3 px-4 py-2 rounded-lg text-[#202124] dark:text-[#F9FAFB] hover:bg-[#E8F0FE] dark:hover:bg-[#1E3A8A] hover:text-[#4285F4] dark:hover:text-[#8AB4F8] transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50 ${location.pathname === link.to
@@ -66,7 +86,7 @@ const DashboardNavigation = () => {
             {/* footer part */}
             <footer className='absolute bottom-0 py-3 px-2 flex justify-between w-full'>
                 <Link to="/">
-                <Button variant='secondary' text="Back to Home" />
+                    <Button variant='secondary' text="Back to Home" />
                 </Link>
                 <LogoutButton />
             </footer>
