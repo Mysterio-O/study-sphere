@@ -56,7 +56,7 @@ const DashboardLayout = () => {
                         <Bars3Icon className="w-6 h-6" />
                     </button>
                 </div>
-                <div className="p-6">
+                <div className="p-6 bg-[#FFFFFF] dark:bg-[#0F172A] bg-gradient-to-br from-[#E8F0FE] to-[#F8F9FA] dark:from-[#1E3A8A] dark:to-[#1F2937] min-h-screen roboto shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)]">
                     <Outlet />
                 </div>
             </div>

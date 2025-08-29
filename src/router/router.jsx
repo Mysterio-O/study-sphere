@@ -6,6 +6,8 @@ import SignIn from "../pages/auth/SignIn";
 import SignUp from "../pages/auth/SignUp";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "../routes/PrivateRoute";
+import Overview from "../pages/Dashboard/Overview";
+import AddSubjects from "../pages/Dashboard/AddSubjects";
 
 const router = createBrowserRouter([
     //  main routes
@@ -38,7 +40,14 @@ const router = createBrowserRouter([
         path: '/dashboard',
         element: <PrivateRoute>
             <DashboardLayout />
-        </PrivateRoute>
+        </PrivateRoute>,
+        children: [
+            { index: true, Component: Overview },
+            {
+                path: 'add-subjects',
+                Component: AddSubjects
+            }
+        ]
     }
 ])
 

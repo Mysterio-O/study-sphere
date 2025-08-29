@@ -2,9 +2,11 @@ import React from 'react';
 import Button from '../components/atoms/Button';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const LogoutButton = () => {
     const { userLogOut } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogOut = () => {
         Swal.fire({
@@ -38,6 +40,7 @@ const LogoutButton = () => {
                                 confirmButton: 'swal-confirm-button'
                             }
                         });
+                        navigate('/')
                     })
                     .catch((err) => {
                         console.error("error logging out user", err);

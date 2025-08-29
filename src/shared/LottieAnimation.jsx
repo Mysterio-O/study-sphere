@@ -1,10 +1,10 @@
 import Lottie from 'lottie-react';
 import React from 'react';
-import animationJSON from '../assets/animation/STUDENT.json';
 
-const LottieAnimation = () => {
+
+const LottieAnimation = ({animationData}) => {
     return (
-        <Lottie animationData={animationJSON} loop={true}/>
+        <Lottie animationData={animationData} loop={true}/>
     );
 };
 
