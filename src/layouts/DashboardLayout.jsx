@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Outlet } from 'react-router';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
@@ -6,22 +6,36 @@ import DashboardNavigation from '../components/Dashboard/DashboardNavigation';
 
 const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth >= 1024);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+
+    }, [])
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+    // console.log(isSidebarOpen);
 
     return (
         <div className="bg-[#FFFFFF] dark:bg-[#0F172A] transition-colors duration-300 min-h-screen flex font-roboto">
             {/* Sidebar */}
             <AnimatePresence>
-                {(isSidebarOpen || window.innerWidth >= 1024) && (
+                {(isSidebarOpen || isLargeScreen) && (
                     <motion.aside
                         key="sidebar"
                         initial={{ x: isSidebarOpen ? "-100%" : 0 }}
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
+
                         className="fixed top-0 left-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/4 h-full 
                  bg-[#F8F9FA] dark:bg-[#1F2937] shadow-[0_4px_12px_rgba(0,0,0,0.1)] 
                  dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] z-50 
@@ -36,7 +50,7 @@ const DashboardLayout = () => {
                                 <XMarkIcon className="w-6 h-6" />
                             </button>
                         </div>
-                        <DashboardNavigation />
+                        <DashboardNavigation setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
                     </motion.aside>
                 )}
             </AnimatePresence>

@@ -9,7 +9,7 @@ import LogoutButton from '../../shared/LogoutButton';
 import { motion } from 'motion/react';
 
 
-const DashboardNavigation = () => {
+const DashboardNavigation = ({setIsSidebarOpen, isSidebarOpen}) => {
     const location = useLocation();
 
     const links = [
@@ -45,6 +45,12 @@ const DashboardNavigation = () => {
         },
     ];
 
+    const handleSidebarToggle = ()=> {
+        if(isSidebarOpen){
+            setIsSidebarOpen(false);
+        }
+    }
+
     return (
         <div className="min-h-screen w-full bg-[#FFFFFF] dark:bg-[#121212] bg-gradient-to-b from-[#E8F0FE] to-[#F8F9FA] dark:from-[#1E3A8A] dark:to-[#1F2937] shadow-[0_4px_12px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-1px_rgba(255,255,255,0.1)] roboto relative">
             {/* Header */}
@@ -65,6 +71,7 @@ const DashboardNavigation = () => {
                                 initial={{ x: -100, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ duration: 0.3, delay: 0.2 * idx }}
+                                onClick={handleSidebarToggle}
                                 key={idx}>
                                 <Link
                                     to={link.to}

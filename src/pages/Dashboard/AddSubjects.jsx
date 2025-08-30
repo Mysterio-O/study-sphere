@@ -103,9 +103,9 @@ const AddSubjects = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col md:flex-row justify-center items-center w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
+            className="flex flex-col-reverse md:flex-row justify-center items-center w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
         >
-            <div className='w-1/2'>
+            <div className='md:w-1/2'>
                 <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6">
                     Add Subjects
                 </h2>
@@ -156,7 +156,7 @@ const AddSubjects = () => {
                     />
                 </form>
             </div>
-            <div className='w-1/2'>
+            <div className='md:w-1/2'>
                 <LottieAnimation animationData={animation} />
             </div>
         </motion.section>
