@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'motion/react';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
@@ -8,10 +8,12 @@ import LottieAnimation from '../../shared/LottieAnimation';
 import animation from '../../assets/animation/schedule.json';
 import Button from '../../components/atoms/Button';
 import { Link } from 'react-router';
+import Swal from 'sweetalert2';
 
 const AllSchedules = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
+    const queryClient = useQueryClient();
 
     const dayColors = {
         Monday: { light: '#4285F4', dark: '#8AB4F8' },
@@ -33,6 +35,44 @@ const AllSchedules = () => {
         },
         enabled: !!user?.email,
     });
+
+    const { mutateAsync: handleRemoveSchedule } = useMutation({
+        mutationKey: ['my-schedules', user?.email],
+        mutationFn: async (data) => {
+            const res = await axiosSecure.delete(`/delete-schedule?email=${user?.email}`, { data });
+            return res.data
+        },
+        enabled: !!user.email,
+        onSuccess: (data) => {
+            console.log(data);
+            queryClient.invalidateQueries('my-schedules');
+            Swal.fire({
+                title: 'Removed!',
+                text: 'The subject has been removed successfully.',
+                icon: 'success',
+                customClass: {
+                    popup: 'swal-container',
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        },
+        onError: (error) => {
+            console.log("error removing schedule", error);
+            Swal.fire({
+                title: 'Deletion Failed',
+                text: 'Failed to delete the subject. Please try again.',
+                icon: 'error',
+                customClass: {
+                    popup: 'swal-container',
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        }
+    })
 
     if (isLoading) {
         return (
@@ -85,14 +125,27 @@ const AllSchedules = () => {
     const handleDelete = async (subject) => {
         console.log("Deleting subject:", subject);
 
-        // try {
-        //   await axiosSecure.delete('/delete-schedule', {
-        //     data: { email: user?.email, subject }, // sending email + subject details
-        //   });
-        //   refetch(); // refresh after delete
-        // } catch (err) {
-        //   console.error("Failed to delete schedule", err);
-        // }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to remove this subject from your schedule?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'swal-container', // Target .swal2-popup
+                title: 'swal-title',
+                htmlContainer: 'swal-text', // Target .swal2-html-container
+                confirmButton: 'swal-confirm-button',
+                cancelButton: 'swal-cancel-button'
+            }
+        }).then(result => {
+            if (result.isConfirmed) {
+                handleRemoveSchedule(subject);
+            }
+        })
+
+
     };
 
     return (
