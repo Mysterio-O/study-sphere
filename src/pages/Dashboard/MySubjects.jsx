@@ -9,6 +9,8 @@ import animation from '../../assets/animation/subjects.json';
 import Swal from 'sweetalert2';
 import FormModal from '../../components/molecules/FormModal';
 import ScheduleModal from '../../components/molecules/ScheduleModal';
+import Button from '../../components/atoms/Button';
+import { Link } from 'react-router';
 
 const MySubjects = () => {
     const axiosSecure = useAxiosSecure();
@@ -180,9 +182,27 @@ const MySubjects = () => {
                     My Subjects
                 </h2>
                 {subjectsData.subjects.length === 0 ? (
-                    <p className="text-[#5F6368] dark:text-[#D1D5DB] text-center">
-                        No subjects added yet.
-                    </p>
+                    <div className="flex flex-col items-center justify-center w-full px-4 text-center">
+
+                        {/* Title */}
+                        <h2 className="text-xl md:text-2xl font-semibold text-[#202124] dark:text-[#F9FAFB] mb-2">
+                            No subjects added yet
+                        </h2>
+
+                        {/* Subtitle */}
+                        <p className="text-[#5F6368] dark:text-[#D1D5DB] max-w-md mb-6">
+                            Start by adding your first subject to manage schedules and stay organized!
+                        </p>
+
+                        {/* Call to action (button placeholder) */}
+                        <Link to="/dashboard/add-subjects">
+                            <Button
+                                variant='primary'
+                                type="button"
+                                text="+ Add Subject"
+                            />
+                        </Link>
+                    </div>
                 ) : (
                     <ul className="flex flex-col gap-3 w-full">
                         {subjectsData.subjects.map((subject, idx) => (
