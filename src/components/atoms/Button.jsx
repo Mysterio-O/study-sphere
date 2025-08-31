@@ -35,7 +35,7 @@ const Button = ({ variant = 'primary', type = 'button', text, onClick, className
         focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50
         ${variantClass}
         ${className}
-        ${disabled ? 'cursor-not-allowed' : ''}
+        ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
       `}
         >
             {

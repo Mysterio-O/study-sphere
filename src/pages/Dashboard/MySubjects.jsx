@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import SubjectCard from './shared/SubjectCard';
 import LottieAnimation from '../../shared/LottieAnimation';
 import animation from '../../assets/animation/subjects.json';
 import Swal from 'sweetalert2';
+import FormModal from '../../components/molecules/FormModal';
 
 const MySubjects = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
     const queryClient = useQueryClient();
+    const [modalInView, setModalInView] = useState(false);
+    const [subject, setSubject] = useState(null);
 
     const { data: subjectsData = { subjects: [], total: 0 }, isLoading, refetch } = useQuery({
         queryKey: ['my-subjects', user?.email],
@@ -61,8 +64,76 @@ const MySubjects = () => {
                     confirmButton: 'swal-confirm-button' // Targets .swal2-popup .swal-confirm-button
                 }
             });
-        }
+        },
+        enabled: !!user?.email
+    });
+
+    // console.log(subjectsData);
+
+    const { mutateAsync: handleUpdateSubject } = useMutation({
+        mutationKey: ['my-subjects', user?.email],
+        mutationFn: async (data) => {
+            const res = await axiosSecure.patch(`/update-subject?email=${user?.email}`, { data });
+            return res.data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries('my-subjects');
+            if (data?.modifiedCount > 0) {
+                setModalInView(false);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated',
+                    text: `Subject updated successfully!`,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-container dark', // dark mode styling
+                        title: 'swal-title',
+                        htmlContainer: 'swal-text',
+                        confirmButton: 'swal-success-button'
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No Changes',
+                    text: 'No updates were made to the subject.',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-container dark',
+                        title: 'swal-title',
+                        htmlContainer: 'swal-text',
+                        confirmButton: 'swal-confirm-button'
+                    }
+                });
+            }
+        },
+        onError: (error) => {
+            console.error("error updating subject", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update subject. Please try again.',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'swal-container',
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text',
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+
+        },
+        enabled: !!user?.email
     })
+
+    // getting data from the child component
+    const showModal = (subjectDetails) => {
+        if (subjectDetails) {
+            setModalInView(true);
+            setSubject(subjectDetails);
+        }
+    }
+    console.log(modalInView);
 
     if (isLoading) {
         return (
@@ -90,7 +161,7 @@ const MySubjects = () => {
                 ) : (
                     <ul className="flex flex-col gap-3 w-full">
                         {subjectsData.subjects.map((subject, idx) => (
-                            <SubjectCard key={subject._id || idx} subject={subject} handleSubjectChange={handleSubjectChange}/>
+                            <SubjectCard key={subject._id || idx} subject={subject} showModal={showModal} handleSubjectChange={handleSubjectChange} />
                         ))}
                     </ul>
                 )}
@@ -98,6 +169,39 @@ const MySubjects = () => {
             <div>
                 <LottieAnimation animationData={animation} />
             </div>
+
+            <AnimatePresence>
+                {modalInView && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        {/* Background overlay with blur */}
+                        <div
+                            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+                            onClick={() => setModalInView(false)}
+                        />
+
+                        {/* Modal content */}
+                        <motion.div
+                            initial={{ scale: 0.85, opacity: 0, y: -50 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.75, opacity: 0, y: -50 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="relative bg-white rounded-2xl shadow-xl max-w-4xl max-h-[calc(100vh-200px)] w-full p-6">
+                            <FormModal subject={subject} setModalInView={setModalInView} handleUpdateSubject={handleUpdateSubject} />
+
+                            {/* Close button */}
+                            <button
+                                onClick={() => setModalInView(false)}
+                                className="absolute top-4 right-4 text-gray-600 hover:text-black cursor-pointer"
+                            >
+                                ✕
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+
+
         </motion.section>
     );
 };

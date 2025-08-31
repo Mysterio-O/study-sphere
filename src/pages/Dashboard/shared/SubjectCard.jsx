@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 import { PhoneIcon } from '@heroicons/react/24/solid';
 import Button from '../../../components/atoms/Button';
 
-const SubjectCard = ({ subject, handleSubjectChange }) => {
+const SubjectCard = ({ subject, handleSubjectChange, showModal }) => {
+
 
   const handleDelete = async (subjectDetails) => {
     console.log(subjectDetails);
@@ -37,6 +38,13 @@ const SubjectCard = ({ subject, handleSubjectChange }) => {
 
   const handleSchedule = (subject) => {
     console.log(subject);
+  };
+
+  const handleEdit = (subjectDetails) => {
+
+    if (subjectDetails) {
+      showModal(subjectDetails);
+    }
   }
 
   return (
@@ -66,12 +74,7 @@ const SubjectCard = ({ subject, handleSubjectChange }) => {
             variant="sec_light"
             type="button"
             text="Edit"
-            onClick={() => (
-              <Link
-                to={`/dashboard/edit-subject/${subject._id}`}
-                aria-label={`Edit ${subject.subjectName}`}
-              />
-            )}
+            onClick={() => handleEdit(subject)}
             className="text-[#202124] dark:text-[#F9FAFB]"
           />
           <Button

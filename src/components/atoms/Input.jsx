@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-const Input = ({ name, type, placeholder, classNames, value, onChange }) => {
+const Input = ({ name, type, placeholder, classNames, value, onChange}) => {
   return (
     <motion.input
       type={type}
