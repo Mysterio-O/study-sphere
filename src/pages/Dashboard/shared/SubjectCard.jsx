@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { PhoneIcon } from '@heroicons/react/24/solid';
 import Button from '../../../components/atoms/Button';
 
-const SubjectCard = ({ subject, handleSubjectChange, showModal }) => {
+const SubjectCard = ({ subject, handleSubjectChange, showModal, scheduleModal }) => {
 
 
   const handleDelete = async (subjectDetails) => {
@@ -36,8 +36,9 @@ const SubjectCard = ({ subject, handleSubjectChange, showModal }) => {
     });
   };
 
-  const handleSchedule = (subject) => {
+  const handleSchedule = (subjectDetails) => {
     console.log(subject);
+    scheduleModal(subjectDetails)
   };
 
   const handleEdit = (subjectDetails) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Input from '../atoms/Input';
 import Button from '../atoms/Button';
 import { motion } from 'motion/react';
+import Swal from 'sweetalert2';
 
 const FormModal = ({ subject, setModalInView, handleUpdateSubject }) => {
     const [formData, setFormData] = useState({
@@ -29,6 +30,26 @@ const FormModal = ({ subject, setModalInView, handleUpdateSubject }) => {
         e.preventDefault();
         // keep your submit logic here
         console.log("Updated data:",subject, formData);
+        const isSame = 
+        subject.subjectName === formData.subjectName &&
+        subject.teacherName === formData.teacherName &&
+        subject.teacherNumber === formData.teacherNumber;
+
+        if(isSame){
+           return Swal.fire({
+            icon: 'info',
+            title: 'No Changes',
+            text: 'You have not made any changes to update.',
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'swal-container dark',
+                title: 'swal-title',
+                htmlContainer: 'swal-text',
+                confirmButton: 'swal-confirm-button'
+            }
+        });
+        }
+
         const newData = {
             oldData:subject,
             newData:formData

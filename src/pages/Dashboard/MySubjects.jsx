@@ -8,12 +8,14 @@ import LottieAnimation from '../../shared/LottieAnimation';
 import animation from '../../assets/animation/subjects.json';
 import Swal from 'sweetalert2';
 import FormModal from '../../components/molecules/FormModal';
+import ScheduleModal from '../../components/molecules/ScheduleModal';
 
 const MySubjects = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [modalInView, setModalInView] = useState(false);
+    const [scheduleInView, setScheduleInView] = useState(false);
     const [subject, setSubject] = useState(null);
 
     const { data: subjectsData = { subjects: [], total: 0 }, isLoading, refetch } = useQuery({
@@ -124,6 +126,21 @@ const MySubjects = () => {
 
         },
         enabled: !!user?.email
+    });
+
+    const { mutateAsync: handleAddSchedule } = useMutation({
+        mutationKey: ['my-schedule', user?.email],
+        mutationFn: async (data) => {
+            const res = await axiosSecure.post(`/add-schedule?email=${user?.email}`, { data });
+            return res.data;
+        },
+        enabled: !!user?.email,
+        onSuccess: (data) => {
+            console.log(data);
+        },
+        onError: (error) => {
+            console.log("error adding schedule", error);
+        }
     })
 
     // getting data from the child component
@@ -133,7 +150,15 @@ const MySubjects = () => {
             setSubject(subjectDetails);
         }
     }
-    console.log(modalInView);
+    // console.log(modalInView);
+
+    const scheduleModal = (subjectDetails) => {
+        console.log(subjectDetails);
+        if (subjectDetails) {
+            setScheduleInView(true);
+            setSubject(subjectDetails)
+        }
+    }
 
     if (isLoading) {
         return (
@@ -161,7 +186,7 @@ const MySubjects = () => {
                 ) : (
                     <ul className="flex flex-col gap-3 w-full">
                         {subjectsData.subjects.map((subject, idx) => (
-                            <SubjectCard key={subject._id || idx} subject={subject} showModal={showModal} handleSubjectChange={handleSubjectChange} />
+                            <SubjectCard key={subject._id || idx} subject={subject} showModal={showModal} handleSubjectChange={handleSubjectChange} scheduleModal={scheduleModal} />
                         ))}
                     </ul>
                 )}
@@ -191,6 +216,35 @@ const MySubjects = () => {
                             {/* Close button */}
                             <button
                                 onClick={() => setModalInView(false)}
+                                className="absolute top-4 right-4 text-gray-600 hover:text-black cursor-pointer"
+                            >
+                                ✕
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {scheduleInView && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        {/* Background overlay with blur */}
+                        <div
+                            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+                            onClick={() => setScheduleInView(false)}
+                        />
+
+                        {/* Modal content */}
+                        <motion.div
+                            initial={{ scale: 0.85, opacity: 0, y: -50 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.75, opacity: 0, y: -50 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="relative bg-white rounded-2xl shadow-xl max-w-4xl max-h-[calc(100vh-200px)] w-full p-6">
+                            <ScheduleModal subject={subject} setScheduleInView={setScheduleInView} handleAddSchedule={handleAddSchedule} />
+
+                            {/* Close button */}
+                            <button
+                                onClick={() => setScheduleInView(false)}
                                 className="absolute top-4 right-4 text-gray-600 hover:text-black cursor-pointer"
                             >
                                 ✕
