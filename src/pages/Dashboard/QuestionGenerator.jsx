@@ -8,83 +8,202 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import QuizUI from './QuizUI';
 import LottieAnimation from '../../shared/LottieAnimation';
 import animation from '../../assets/animation/question-generator.json';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const QuestionGenerator = () => {
+    // State to manage form inputs: question type, difficulty, topic, and number of questions
     const [formData, setFormData] = useState({
         questionType: '',
         difficulty: '',
         topic: '',
         questionNumbers: '',
     });
+
+    const navigate = useNavigate();
+
+
+    // State to store generated questions from the API
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
+
+
+    // State to toggle between form and quiz UI
     const [showQuiz, setShowQuiz] = useState(false);
 
+    // State to manage loading status during question generation
+    const [loading, setLoading] = useState(false);
+
+    // Custom hook to access authenticated user data
     const { user } = useAuth();
+
+    // Custom hook to provide secure Axios instance for API requests with accessToken
     const axiosSecure = useAxiosSecure();
 
-    // Generate questions
+    // Mutation to generate questions via API
     const { mutateAsync: handleGenerateQuestion } = useMutation({
+        // Unique key for the mutation, tied to user email
         mutationKey: ['question-generation', user?.email],
+        // Enable mutation only if user email exists
         enabled: !!user?.email,
+        // Function to send question generation request to the server
         mutationFn: async (data) => {
             const res = await axiosSecure.post(`/question-generator?email=${user?.email}`, { data });
             return res.data;
         },
+        // On successful response, parse questions and update state
         onSuccess: (data) => {
             const questions = parseAIResponse(data.raw, data.questionType);
             setGeneratedQuestions(questions);
+            setLoading(false);
             setShowQuiz(true);
         },
-        onError: (error) => console.error('Error generating questions', error),
+        // Log errors and reset loading state on failure
+        onError: (error) => {
+            console.error('Error generating questions', error);
+            setLoading(false);
+        }
     });
 
-    // Verify short-answer via AI
+    // Mutation to verify short-answer responses via AI
     const { mutateAsync: verifyAnswer } = useMutation({
+        // Unique key for answer verification mutation
         mutationKey: ['verify-answer', user?.email],
+        // Enable mutation only if user email exists
         enabled: !!user?.email,
+        // Function to send answer verification request to the server
         mutationFn: async (data) => {
             const res = await axiosSecure.post(`/verify-answers?email=${user?.email}`, { data });
             return res.data;
         },
     });
 
+    // Mutation to save quiz progress to the server
+    const { mutateAsync: saveProgress } = useMutation({
+        // Unique key for saving quiz progress
+        mutationKey: ['save-quiz-progress', user?.email],
+        // Enable mutation only if user email exists
+        enabled: !!user?.email,
+        // Function to send quiz progress data to the server
+        mutationFn: async (payload) => {
+            const res = await axiosSecure.post(
+                `/save-quiz-progress`,
+                payload,
+                { params: { email: user?.email } }
+            );
+            return res.data;
+        },
+        onSuccess: () => {
+            // showing success with sweet alert2
+            Swal.fire({
+                icon: 'success',
+                title: 'Progress Saved',
+                text: 'Welcome back!',
+                confirmButtonText: "Visit Overview",
+                showCancelButton: true,
+                cancelButtonText: 'Stay Here',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button',
+                    cancelButton: 'swal-cancel-button'
+                }
+            }).then((result)=> {
+                if(result.isConfirmed){
+                    // navigating to overview
+                    navigate('/dashboard')
+                }
+            })
+        },
+        onError: (error) => {
+            console.error('error updating quiz progress', error);
+            // showing error with sweet alert2
+            Swal.fire({
+                title: 'Update Failed',
+                text: 'Failed to update quiz progress for' + ' ' + error?.message || 'Failed to update quiz progress',
+                icon: 'error',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        }
+    });
+
+    // Handler for form input changes, updating formData state
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Handler for form submission to generate questions
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
         handleGenerateQuestion(formData);
     };
 
-    const handleQuizSubmit = async (userAnswers) => {
+    // Handler for quiz submission, processes answers based on question type
+    const handleQuizSubmit = async (userAnswers, setLoadingState) => {
         try {
             if (formData.questionType === 'short-answer') {
+                // Prepare data for AI verification of short answers
                 const verificationData = generatedQuestions.map((q, i) => ({
                     question: q.question,
                     userAnswer: userAnswers[i] || '',
                 }));
 
+                // Verify answers via API
                 const { results } = await verifyAnswer(verificationData);
 
-                // Map AI results to questions
-                const updatedQuestions = results.map((q, i) => ({
+                // Map AI verification results to include scoring and UI data
+                const scored = results.map((q, i) => ({
                     ...q,
+                    question: generatedQuestions[i]?.question || q.question,
+                    options: generatedQuestions[i]?.options,
                     userAnswer: userAnswers[i] || '',
-                    isCorrect: q.isCorrect,
-                    correctAnswer: q.correctAnswer || q.answer, // fallback if AI missed correctAnswer
+                    correctAnswer: q.correctAnswer || q.answer || '',
+                    isCorrect: !!q.isCorrect,
                 }));
 
-                setGeneratedQuestions(updatedQuestions);
-            } else if (formData.questionType === 'quiz' || formData.questionType === 'true-false') {
-                const results = generatedQuestions.map((q, i) => {
-                    const userAnswer = userAnswers[i]?.toString().trim();
+                // Update UI with scored results
+                setGeneratedQuestions(scored);
+                setShowQuiz(true);
 
-                    let correctAnswerText = q.correctAnswer || q.answer; // for quiz, q.answer is letter e.g., 'A'
+                // Prepare payload for saving progress
+                const payload = {
+                    quizType: formData.questionType,
+                    topic: formData.topic,
+                    difficulty: formData.difficulty,
+                    questions: scored.map(q => ({
+                        question: q.question,
+                        options: q.options,
+                        userAnswer: q.userAnswer || '',
+                        correctAnswer: q.correctAnswer || q.answer || '',
+                        isCorrect: !!q.isCorrect,
+                    })),
+                };
+
+                // Save quiz progress to the server
+                try {
+                    await saveProgress(payload);
+                } catch (e) {
+                    console.error('Save progress failed:', e);
+                }
+
+                setLoadingState(false);
+                
+            } else if (formData.questionType === 'quiz' || formData.questionType === 'true-false') {
+                // Local scoring for MCQ and true/false questions
+                const results = generatedQuestions.map((q, i) => {
+                    const userAnswer = (userAnswers[i]?.toString() || '').trim();
+                    let correctAnswerText = q.correctAnswer || q.answer;
+
+                    // Convert MCQ answer (e.g., 'A') to option text if applicable
                     if (q.options && /^[A-D]$/i.test(correctAnswerText)) {
-                        // Convert letter to actual option text
-                        const index = correctAnswerText.toUpperCase().charCodeAt(0) - 65; // 'A' -> 0
+                        const index = correctAnswerText.toUpperCase().charCodeAt(0) - 65;
                         correctAnswerText = q.options[index];
                     }
 
@@ -96,15 +215,40 @@ const QuestionGenerator = () => {
                     };
                 });
 
+                // Update UI with scored results
                 setGeneratedQuestions(results);
-            }
+                setShowQuiz(true);
 
-            setShowQuiz(true);
+                // Prepare payload for saving progress
+                const payload = {
+                    quizType: formData.questionType,
+                    topic: formData.topic,
+                    difficulty: formData.difficulty,
+                    questions: results.map(q => ({
+                        question: q.question,
+                        options: q.options,
+                        userAnswer: q.userAnswer || '',
+                        correctAnswer: q.correctAnswer || q.answer || '',
+                        isCorrect: !!q.isCorrect,
+                    })),
+                };
+
+                // Save quiz progress to the server
+                try {
+                    await saveProgress(payload);
+                } catch (e) {
+                    console.error('Save progress failed:', e);
+                }
+
+                setLoadingState(false);
+            }
         } catch (error) {
             console.error('Error verifying answers:', error);
+            setLoadingState(false);
         }
     };
 
+    // Render the question generator form or quiz UI based on state
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -112,6 +256,7 @@ const QuestionGenerator = () => {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="flex flex-col md:flex-row items-center justify-center min-h-screen px-4 gap-6"
         >
+            {/* Lottie animation for visual appeal */}
             <div className="w-full max-w-md">
                 <LottieAnimation
                     animationData={animation}
@@ -119,11 +264,13 @@ const QuestionGenerator = () => {
                 />
             </div>
             {!showQuiz ? (
+                // Form for generating questions
                 <div className="w-full max-w-lg bg-[#FFFFFF] dark:bg-[#1F2937] p-6 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] roboto">
                     <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6 text-center">
                         Question Generator
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Question Type Selection */}
                         <div>
                             <label className="block mb-2 text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
                                 Question Type
@@ -143,6 +290,7 @@ const QuestionGenerator = () => {
                             </select>
                         </div>
 
+                        {/* Difficulty Level Selection */}
                         <div>
                             <label className="block mb-2 text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
                                 Difficulty Level
@@ -162,6 +310,7 @@ const QuestionGenerator = () => {
                             </select>
                         </div>
 
+                        {/* Number of Questions Input */}
                         <div>
                             <label className="block mb-2 text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
                                 Number of Questions
@@ -175,6 +324,7 @@ const QuestionGenerator = () => {
                             />
                         </div>
 
+                        {/* Topic Input */}
                         <div>
                             <label className="block mb-2 text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
                                 Topic / Subject
@@ -188,6 +338,7 @@ const QuestionGenerator = () => {
                             />
                         </div>
 
+                        {/* Submit Button */}
                         <div className="flex justify-center">
                             <Button
                                 type="submit"
@@ -195,17 +346,21 @@ const QuestionGenerator = () => {
                                 variant="primary"
                                 className="w-full"
                                 aria-label="Generate questions"
+                                loading={loading}
+                                disabled={loading}
                             />
                         </div>
                     </form>
                 </div>
             ) : (
+                // Render Quiz UI when questions are generated
                 <div className="w-full max-w-2xl">
                     <QuizUI
                         questions={generatedQuestions}
                         questionType={formData.questionType}
                         onSubmit={handleQuizSubmit}
                         onGenerateAnother={() => {
+                            // Reset state to allow generating a new quiz
                             setGeneratedQuestions([]);
                             setShowQuiz(false);
                             setFormData({
@@ -222,11 +377,13 @@ const QuestionGenerator = () => {
     );
 };
 
-// Parse AI response (unchanged)
+// Utility function to parse raw AI response into structured question data
 function parseAIResponse(rawText, type) {
+    // Split raw text into lines and filter out empty ones
     const lines = rawText.split('\n').filter(Boolean);
     const questions = [];
 
+    // Parse true/false questions
     if (type === 'true-false') {
         lines.forEach((line, idx) => {
             if (line.startsWith('Question:')) {
@@ -235,7 +392,9 @@ function parseAIResponse(rawText, type) {
                 questions.push({ question, answer });
             }
         });
-    } else if (type === 'quiz') {
+    }
+    // Parse multiple-choice questions
+    else if (type === 'quiz') {
         let i = 0;
         while (i < lines.length) {
             if (lines[i].startsWith('Question:')) {
@@ -247,7 +406,9 @@ function parseAIResponse(rawText, type) {
                 i += 3;
             } else i++;
         }
-    } else if (type === 'short-answer') {
+    }
+    // Parse short-answer questions
+    else if (type === 'short-answer') {
         lines.forEach((line, idx) => {
             if (line.startsWith('Question:')) {
                 const question = line.replace('Question:', '').trim();
