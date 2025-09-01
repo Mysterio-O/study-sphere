@@ -25,7 +25,22 @@ const AllSchedules = () => {
         Sunday: { light: '#26A69A', dark: '#4DB6AC' },
     };
 
-    const { data: schedules = [], isLoading, refetch } = useQuery({
+    // Subject colors
+    const subjectColors = [
+        { light: "#E3F2FD", dark: "#1E3A8A" }, // Blue
+        { light: "#FCE4EC", dark: "#9D174D" }, // Pink
+        { light: "#E8F5E9", dark: "#14532D" }, // Green
+        { light: "#FFF3E0", dark: "#9A3412" }, // Orange
+        { light: "#F3E5F5", dark: "#6B21A8" }, // Purple
+        { light: "#E0F7FA", dark: "#0E7490" }, // Cyan
+        { light: "#FFFDE7", dark: "#854D0E" }, // Yellow
+    ];
+
+    const getSubjectColor = (idx) => {
+        return subjectColors[idx % subjectColors.length];
+    };
+
+    const { data: schedules = [], isLoading } = useQuery({
         queryKey: ['my-schedules', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get('/my-schedules', {
@@ -40,12 +55,10 @@ const AllSchedules = () => {
         mutationKey: ['my-schedules', user?.email],
         mutationFn: async (data) => {
             const res = await axiosSecure.delete(`/delete-schedule?email=${user?.email}`, { data });
-            return res.data
+            return res.data;
         },
-        enabled: !!user.email,
-        onSuccess: (data) => {
-            console.log(data);
-            queryClient.invalidateQueries('my-schedules');
+        onSuccess: () => {
+            queryClient.invalidateQueries(['my-schedules', user?.email]);
             Swal.fire({
                 title: 'Removed!',
                 text: 'The subject has been removed successfully.',
@@ -58,8 +71,7 @@ const AllSchedules = () => {
                 }
             });
         },
-        onError: (error) => {
-            console.log("error removing schedule", error);
+        onError: () => {
             Swal.fire({
                 title: 'Deletion Failed',
                 text: 'Failed to delete the subject. Please try again.',
@@ -72,12 +84,12 @@ const AllSchedules = () => {
                 }
             });
         }
-    })
+    });
 
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-base">
+                <p className="text-[#5F6368] dark:text-[#D1D5DB] roboto text-base">
                     Loading...
                 </p>
             </div>
@@ -87,26 +99,19 @@ const AllSchedules = () => {
     if (!schedules || schedules.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center h-screen px-4 text-center">
-                {/* Lottie Animation */}
                 <div className="w-64 h-64 mb-6">
                     <LottieAnimation animationData={animation} />
                 </div>
-
-                {/* Title */}
                 <h2 className="text-xl md:text-2xl font-semibold text-[#202124] dark:text-[#F9FAFB] mb-2">
                     No schedules found
                 </h2>
-
-                {/* Subtitle */}
                 <p className="text-[#5F6368] dark:text-[#D1D5DB] max-w-md mb-6">
                     Looks like you haven’t added any schedules yet.
                     Start by creating a schedule to keep track of your daily routine!
                 </p>
-
-                {/* Call to action (button placeholder) */}
                 <Link to="/dashboard/my-subjects">
                     <Button
-                        variant='primary'
+                        variant="primary"
                         type="button"
                         text="+ Add Schedule"
                     />
@@ -115,7 +120,6 @@ const AllSchedules = () => {
         );
     }
 
-
     const groupedSchedules = schedules.reduce((acc, schedule) => {
         if (!acc[schedule.day]) acc[schedule.day] = [];
         acc[schedule.day].push(schedule);
@@ -123,8 +127,6 @@ const AllSchedules = () => {
     }, {});
 
     const handleDelete = async (subject) => {
-        console.log("Deleting subject:", subject);
-
         Swal.fire({
             title: 'Are you sure?',
             text: 'Do you want to remove this subject from your schedule?',
@@ -133,9 +135,9 @@ const AllSchedules = () => {
             confirmButtonText: 'Yes, remove it',
             cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'swal-container', // Target .swal2-popup
+                popup: 'swal-container',
                 title: 'swal-title',
-                htmlContainer: 'swal-text', // Target .swal2-html-container
+                htmlContainer: 'swal-text',
                 confirmButton: 'swal-confirm-button',
                 cancelButton: 'swal-cancel-button'
             }
@@ -143,9 +145,7 @@ const AllSchedules = () => {
             if (result.isConfirmed) {
                 handleRemoveSchedule(subject);
             }
-        })
-
-
+        });
     };
 
     return (
@@ -153,9 +153,9 @@ const AllSchedules = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col-reverse md:flex-row justify-between w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
+            className="flex flex-col-reverse md:flex-row justify-between w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] roboto"
         >
-            <div className='w-full'>
+            <div className="w-full">
                 <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6 flex items-center gap-2">
                     <CalendarIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
                     All Schedules
@@ -179,39 +179,40 @@ const AllSchedules = () => {
                                 <h3 className="text-lg font-semibold">{day}</h3>
                             </div>
                             <div className="p-4 space-y-4">
-                                {groupedSchedules[day].map((item, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="relative border border-[#DADCE0] dark:border-[#374151] rounded-lg p-3 bg-[#FFFFFF] dark:bg-[#1F2937] hover:bg-[#E8F0FE] dark:hover:bg-[#1E3A8A] transition-all duration-200"
-                                    >
-                                        {/* Delete Button */}
-                                        <button
-                                            onClick={() => handleDelete(item)}
-                                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                {groupedSchedules[day].map((item, idx) => {
+                                    const subjectColor = getSubjectColor(idx);
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className="relative border border-[#DADCE0] dark:border-[#374151] rounded-lg p-3 transition-all duration-200"
+                                            style={{
+                                                backgroundColor: subjectColor.light,
+                                                color: "#202124",
+                                            }}
                                         >
-                                            <TrashIcon className="w-5 h-5" />
-                                        </button>
+                                            {/* Delete Button */}
+                                            <button
+                                                onClick={() => handleDelete(item)}
+                                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                            >
+                                                <TrashIcon className="w-5 h-5" />
+                                            </button>
 
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <BookOpenIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
-                                            <span className="font-medium text-[#202124] dark:text-[#F9FAFB]">
-                                                {item.subjectName}
-                                            </span>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <BookOpenIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
+                                                <span className="font-medium">{item.subjectName}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <UserIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
+                                                <span>{item.teacherName}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <ClockIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
+                                                <span>{item.time}</span>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <UserIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
-                                            <span className="text-[#5F6368] dark:text-[#D1D5DB]">
-                                                {item.teacherName}
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <ClockIcon className="w-4 h-4 text-[#4285F4] dark:text-[#8AB4F8]" />
-                                            <span className="text-[#5F6368] dark:text-[#D1D5DB]">
-                                                {item.time}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </motion.div>
                     ))}

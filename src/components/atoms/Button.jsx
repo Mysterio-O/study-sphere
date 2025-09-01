@@ -30,7 +30,7 @@ const Button = ({ variant = 'primary', type = 'button', text, onClick, className
             onClick={onClick}
             disabled={disabled}
             className={`
-        px-4 py-2 rounded-lg font-roboto font-medium text-base
+        px-4 py-2 rounded-lg roboto font-medium text-base
         transition-all duration-300
         focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50
         ${variantClass}

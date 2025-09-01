@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router';
-import { ChartBarIcon, PlusCircleIcon, UserCircleIcon, BookOpenIcon, CalendarIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
+import { ChartBarIcon, PlusCircleIcon, UserCircleIcon, BookOpenIcon, CalendarIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/solid';
 import UserPhoto from '../../shared/UserPhoto';
 import DashboardTitle from './DashboardTitle';
 import ThemeSwitch from '../../shared/ThemeSwitch';
@@ -9,7 +9,7 @@ import LogoutButton from '../../shared/LogoutButton';
 import { motion } from 'motion/react';
 
 
-const DashboardNavigation = ({setIsSidebarOpen, isSidebarOpen}) => {
+const DashboardNavigation = ({ setIsSidebarOpen, isSidebarOpen }) => {
     const location = useLocation();
 
     const links = [
@@ -39,20 +39,30 @@ const DashboardNavigation = ({setIsSidebarOpen, isSidebarOpen}) => {
             to: '/dashboard/my-schedules',
         },
         {
+            name: "Q&A Generator",
+            Icon: QuestionMarkCircleIcon,
+            to: '/dashboard/qa-generator'
+        },
+        {
+            name: 'Study Planner',
+            Icon: ClipboardDocumentCheckIcon,
+            to: "/dashboard/study-planner"
+        },
+        {
             name: 'Setting',
             Icon: Cog6ToothIcon,
             to: '/dashboard/setting',
         },
     ];
 
-    const handleSidebarToggle = ()=> {
-        if(isSidebarOpen){
+    const handleSidebarToggle = () => {
+        if (isSidebarOpen) {
             setIsSidebarOpen(false);
         }
     }
 
     return (
-        <div className="min-h-screen w-full bg-[#FFFFFF] dark:bg-[#121212] bg-gradient-to-b from-[#E8F0FE] to-[#F8F9FA] dark:from-[#1E3A8A] dark:to-[#1F2937] shadow-[0_4px_12px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-1px_rgba(255,255,255,0.1)] roboto relative">
+        <div className="min-h-screen relative w-full bg-[#FFFFFF] dark:bg-[#121212] bg-gradient-to-b from-[#E8F0FE] to-[#F8F9FA] dark:from-[#1E3A8A] dark:to-[#1F2937] shadow-[0_4px_12px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-1px_rgba(255,255,255,0.1)] roboto ">
             {/* Header */}
             <header className="flex items-center justify-between py-6 px-4">
                 <div className="flex flex-col items-center justify-center">
@@ -63,7 +73,7 @@ const DashboardNavigation = ({setIsSidebarOpen, isSidebarOpen}) => {
             </header>
 
             {/* Navigation Links */}
-            <main className="px-2 py-4 sticky top-0 overflow-y-auto">
+            <main className="px-2 py-4 overflow-y-auto">
                 <nav>
                     <ul className="flex flex-col gap-2">
                         {links.map((link, idx) => (

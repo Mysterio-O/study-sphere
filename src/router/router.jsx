@@ -10,6 +10,9 @@ import Overview from "../pages/Dashboard/Overview";
 import AddSubjects from "../pages/Dashboard/AddSubjects";
 import MySubjects from "../pages/Dashboard/MySubjects";
 import AllSchedules from "../pages/Dashboard/AllSchedules";
+import Setting from "../pages/Dashboard/Setting";
+import QuestionGenerator from "../pages/Dashboard/QuestionGenerator";
+import StudyPlanner from "../pages/Dashboard/StudyPlanner";
 
 const router = createBrowserRouter([
     //  main routes
@@ -54,8 +57,20 @@ const router = createBrowserRouter([
                 Component: MySubjects
             },
             {
-                path:"my-schedules",
+                path: "my-schedules",
                 Component: AllSchedules
+            },
+            {
+                path: 'setting',
+                Component: Setting
+            },
+            {
+                path: "qa-generator",
+                Component: QuestionGenerator
+            },
+            {
+                path: "study-planner",
+                Component: StudyPlanner
             }
         ]
     }

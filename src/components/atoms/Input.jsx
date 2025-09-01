@@ -18,7 +18,7 @@ const Input = ({ name, type, placeholder, classNames, value, onChange}) => {
         text-[#202124] dark:text-[#F9FAFB] placeholder-[#5F6368] dark:placeholder-[#D1D5DB]
         border border-[#DADCE0] dark:border-[#374151]
         focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:border-transparent
-        font-roboto text-base
+        roboto text-base
         transition-all duration-200
         ${classNames ? classNames : ''}
       `}

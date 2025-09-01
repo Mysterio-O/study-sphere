@@ -25,7 +25,7 @@ const DashboardLayout = () => {
     // console.log(isSidebarOpen);
 
     return (
-        <div className="bg-[#FFFFFF] dark:bg-[#0F172A] transition-colors duration-300 min-h-screen flex font-roboto">
+        <div className="bg-[#FFFFFF] dark:bg-[#0F172A] transition-colors duration-300 min-h-screen flex roboto">
             {/* Sidebar */}
             <AnimatePresence>
                 {(isSidebarOpen || isLargeScreen) && (
@@ -41,16 +41,19 @@ const DashboardLayout = () => {
                  dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] z-50 
                  lg:static lg:shadow-none lg:block"
                     >
-                        <div className="flex justify-end items-center p-4 lg:hidden">
-                            <button
-                                onClick={toggleSidebar}
-                                className="p-2 text-[#4285F4] dark:text-[#8AB4F8] hover:bg-[#E8F0FE] dark:hover:bg-[#1E3A8A] rounded-full focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50"
-                                aria-label="Close Sidebar"
-                            >
-                                <XMarkIcon className="w-6 h-6" />
-                            </button>
+
+                        <div className='fixed w-full md:w-2/4 lg:w-1/4 top-0'>
+                            <div className="flex w-full justify-end items-center p-4 lg:hidden">
+                                <button
+                                    onClick={toggleSidebar}
+                                    className="p-2 text-[#4285F4] dark:text-[#8AB4F8] hover:bg-[#E8F0FE] dark:hover:bg-[#1E3A8A] rounded-full focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-opacity-50"
+                                    aria-label="Close Sidebar"
+                                >
+                                    <XMarkIcon className="w-6 h-6" />
+                                </button>
+                            </div>
+                            <DashboardNavigation setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
                         </div>
-                        <DashboardNavigation setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
                     </motion.aside>
                 )}
             </AnimatePresence>

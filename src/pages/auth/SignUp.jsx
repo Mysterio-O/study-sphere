@@ -188,7 +188,7 @@ const SignUp = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col justify-center items-center w-full max-w-md p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
+            className="flex flex-col justify-center items-center w-full max-w-md p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] roboto"
         >
             <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6">Sign Up for StudySphere</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
@@ -210,7 +210,7 @@ const SignUp = () => {
                         name="institutionType"
                         value={institutionType}
                         onChange={(e) => setInstitutionType(e.target.value)}
-                        className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] font-roboto text-base"
+                        className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] roboto text-base"
                         aria-label="Select Institution Type"
                     >
                         <option value="School">School</option>
@@ -231,7 +231,7 @@ const SignUp = () => {
                                 name="year"
                                 value={formData.year}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] font-roboto text-base"
+                                className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] roboto text-base"
                                 aria-label="Select Year"
                             >
                                 <option value="1st">1st Year</option>

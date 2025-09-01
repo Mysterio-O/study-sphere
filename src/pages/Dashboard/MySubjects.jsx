@@ -165,7 +165,7 @@ const MySubjects = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] font-roboto">Loading...</p>
+                <p className="text-[#5F6368] dark:text-[#D1D5DB] roboto">Loading...</p>
             </div>
         );
     }
@@ -175,7 +175,7 @@ const MySubjects = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex flex-col md:flex-row justify-center items-center w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
+            className="flex flex-col md:flex-row justify-center items-center w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] roboto"
         >
             <div className='flex flex-col justify-center items-center w-full max-w-2xl mx-auto md:p-6'>
                 <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6">
