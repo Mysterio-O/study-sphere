@@ -57,7 +57,7 @@ const QuizOverviewCard = ({ solved = 0, correct = 0, type = 'easy', text = '',on
     return (
         <motion.div
             whileHover={{ scale: 1.02 }}
-            className={`w-full max-w-sm p-6 rounded-lg bg-[#F8F9FA] dark:bg-[#2D3748] border ${customColorClass[type]} shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] font-roboto transition-all duration-200`}
+            className={`w-full cursor-pointer max-w-sm p-6 rounded-lg bg-[#F8F9FA] dark:bg-[#2D3748] border ${customColorClass[type]} shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] font-roboto transition-all duration-200`}
             aria-label={`${type} quiz progress card`}
             onClick={onClick}
         >
