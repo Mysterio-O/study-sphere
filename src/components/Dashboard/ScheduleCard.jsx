@@ -27,7 +27,7 @@ const StatCard = ({ label, value, hint, accent = 'blue', onClick }) => {
             onClick={onClick}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full rounded-lg p-4 bg-[#F8F9FA] dark:bg-[#2D3748] border border-[#DADCE0] dark:border-[#374151] shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] font-roboto transition-all duration-200 cursor-pointer"
+            className="w-full h-[122px] rounded-lg p-4 bg-[#F8F9FA] dark:bg-[#2D3748] border border-[#DADCE0] dark:border-[#374151] shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] font-roboto transition-all duration-200 cursor-pointer"
             role="group"
             aria-label={label}
         >
