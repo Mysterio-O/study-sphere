@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import Input from '../../components/atoms/Input';
-import Button from '../../components/atoms/Button';
+import Input from '../atoms/Input';
+import Button from '../atoms/Button';
 
 const QuizUI = ({ questions, questionType, onSubmit, onGenerateAnother }) => {
     // State to store user answers, indexed by question number

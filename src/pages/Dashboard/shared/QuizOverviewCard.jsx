@@ -1,17 +1,20 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-const QuizOverviewCard = ({ solved = 0, correct = 0, type = 'easy' }) => {
+const QuizOverviewCard = ({ solved = 0, correct = 0, type = 'easy', text = '',onClick }) => {
     const customColorClass = {
         easy: 'border-[#34A853] dark:border-[#6EE7B7] bg-[#34A853]/10 dark:bg-[#6EE7B7]/20',
         medium: 'border-[#FBBC05] dark:border-[#FBBF24] bg-[#FBBC05]/10 dark:bg-[#FBBF24]/20',
         hard: 'border-[#EA4335] dark:border-[#FCA5A5] bg-[#EA4335]/10 dark:bg-[#FCA5A5]/20',
+        total: 'border-[#4285F4] dark:border-[#8AB4F8] bg-[#4285F4]/10 dark:bg-[#8AB4F8]/20'
     };
+    // console.log(type);
 
     const customTextColor = {
         easy: 'text-[#34A853] dark:text-[#6EE7B7]',
         medium: 'text-[#FBBC05] dark:text-[#FBBF24]',
         hard: 'text-[#EA4335] dark:text-[#FCA5A5]',
+        total: 'text-[#4285F4] dark:text-[#8AB4F8]'
     };
 
     const progressPercentage = (solvedCounts, correctCounts) => {
@@ -36,23 +39,35 @@ const QuizOverviewCard = ({ solved = 0, correct = 0, type = 'easy' }) => {
 
     const progressbarColor = `${percentage > 85 ? 'bg-[#34A853] dark:bg-[#6EE7B7]'
         : percentage > 70 && percentage < 85 ? 'bg-[#4285F4] dark:bg-[#8AB4F8]'
-        : percentage > 50 && percentage < 70 ? 'bg-[#FBBC05] dark:bg-[#FBBF24]'
-        : 'bg-[#EA4335] dark:bg-[#FCA5A5]'
-    }`
+            : percentage > 50 && percentage < 70 ? 'bg-[#FBBC05] dark:bg-[#FBBF24]'
+                : 'bg-[#EA4335] dark:bg-[#FCA5A5]'
+        }`
+
+
+        const capitalizeFirst = (text)=> {
+            if(!text){
+                return '';
+            }
+            const finalOutput =  text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+            // console.log(finalOutput);
+            return finalOutput
+        };
+
 
     return (
         <motion.div
             whileHover={{ scale: 1.02 }}
             className={`w-full max-w-sm p-6 rounded-lg bg-[#F8F9FA] dark:bg-[#2D3748] border ${customColorClass[type]} shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] font-roboto transition-all duration-200`}
             aria-label={`${type} quiz progress card`}
+            onClick={onClick}
         >
             <h3 className={`text-xl font-bold ${customTextColor[type]} text-center mb-4`}>
-                {type.toUpperCase()}
+                {text.toUpperCase()}
             </h3>
             <div className="space-y-4">
                 <div>
                     <p className="text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
-                        Solved: <span className={customTextColor[type]}>{solved}</span>
+                       {capitalizeFirst(type)} Problem Solved: <span className={customTextColor[type]}>{solved}</span>
                     </p>
                     <p className="text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">
                         Correct: <span className={customTextColor[type]}>{correct}</span>

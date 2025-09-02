@@ -5,11 +5,11 @@ import Button from '../../components/atoms/Button';
 import { useMutation } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import QuizUI from './QuizUI';
 import LottieAnimation from '../../shared/LottieAnimation';
 import animation from '../../assets/animation/question-generator.json';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router';
+import QuizUI from '../../components/Dashboard/QuizUI';
 
 const QuestionGenerator = () => {
     // State to manage form inputs: question type, difficulty, topic, and number of questions
