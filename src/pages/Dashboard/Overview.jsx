@@ -6,12 +6,14 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { ChartBarIcon } from '@heroicons/react/24/solid';
 import QuizOverView from '../../components/Dashboard/QuizOverView';
 import QuizDetailsModal from '../../components/Dashboard/QuizDetailsModal';
+import ScheduleCard from '../../components/Dashboard/ScheduleCard';
+import SubjectDistributionChart from '../../components/Dashboard/SubjectDistributionChart';
 
 const Overview = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const [isModalOpen,setIsModalOpen]=useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedQuizType, setSelectedQuizType] = useState(null);
     const [filteredQuizzes, setFilteredQuizzes] = useState([]);
 
@@ -26,12 +28,24 @@ const Overview = () => {
         },
     });
 
-    const handleCardCLick = (type)=> {
-        let filtered = [];
-        if(type === "total"){
-            filtered=myQuizProgression.quizzes;
+    const { data: schedules = [] } = useQuery({
+        queryKey: ['schedules', user?.email],
+        enabled: !!user?.email,
+        queryFn: async () => {
+            const res = await axiosSecure.get('/my-schedules', {
+                params: { email: user?.email }
+            });
+            return res.data
         }
-        else{
+    });
+    // console.log(schedules);
+
+    const handleCardCLick = (type) => {
+        let filtered = [];
+        if (type === "total") {
+            filtered = myQuizProgression.quizzes;
+        }
+        else {
             filtered = myQuizProgression?.quizzes.filter(quiz => quiz?.difficulty === type);
             console.log(filtered);
         }
@@ -40,7 +54,7 @@ const Overview = () => {
         setIsModalOpen(true);
     };
 
-    const closeModal = ()=> {
+    const closeModal = () => {
         setIsModalOpen(false);
         setSelectedQuizType(null);
         setFilteredQuizzes([]);
@@ -56,7 +70,7 @@ const Overview = () => {
         );
     };
 
-    console.log(isModalOpen,filteredQuizzes,);
+    console.log(isModalOpen, filteredQuizzes,);
 
     return (
         <motion.section
@@ -65,17 +79,20 @@ const Overview = () => {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="flex flex-col items-center w-full p-6 bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] font-roboto"
         >
+            <ScheduleCard schedules={schedules} />
+            <SubjectDistributionChart schedules={schedules}/>
             <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6 flex items-center gap-2">
                 <ChartBarIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
                 Your Quiz History
             </h2>
-            <QuizOverView myQuizProgression={myQuizProgression} onCardClick={handleCardCLick}/>
+            <QuizOverView myQuizProgression={myQuizProgression} onCardClick={handleCardCLick} />
             <QuizDetailsModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            quizzes={filteredQuizzes}
-            title={`${selectedQuizType ? selectedQuizType.toUpperCase() : ''} Quiz Details`}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                quizzes={filteredQuizzes}
+                title={`${selectedQuizType ? selectedQuizType.toUpperCase() : ''} Quiz Details`}
             />
+
         </motion.section>
     );
 };
