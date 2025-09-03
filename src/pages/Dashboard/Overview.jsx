@@ -78,7 +78,7 @@ const Overview = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="w-full max-w-7xl mx-auto p-6 font-roboto"
+            className="w-full p-6 roboto"
         >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left Column: ScheduleCard and QuizOverView */}
