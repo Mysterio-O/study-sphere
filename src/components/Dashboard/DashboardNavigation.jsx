@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router';
-import { ChartBarIcon, PlusCircleIcon, UserCircleIcon, BookOpenIcon, CalendarIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/solid';
+import { ChartBarIcon, PlusCircleIcon, UserCircleIcon, BookOpenIcon, CalendarIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ClipboardDocumentCheckIcon, WalletIcon } from '@heroicons/react/24/solid';
 import UserPhoto from '../../shared/UserPhoto';
 import DashboardTitle from './DashboardTitle';
 import ThemeSwitch from '../../shared/ThemeSwitch';
@@ -47,6 +47,11 @@ const DashboardNavigation = ({ setIsSidebarOpen, isSidebarOpen }) => {
             name: 'Study Planner',
             Icon: ClipboardDocumentCheckIcon,
             to: "/dashboard/study-planner"
+        },
+        {
+            name: 'My Wallet',
+            Icon: WalletIcon,
+            to: "/dashboard/my-wallet"
         },
         {
             name: 'Setting',
