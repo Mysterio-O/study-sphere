@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ClockIcon } from '@heroicons/react/24/solid';
 
@@ -29,11 +29,9 @@ const NextClassWidget = ({ schedules }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-center max-w-sm mx-auto"
-                role="alert"
-                aria-describedby="no-class-message"
+                className="p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-center max-w-sm mx-auto"
             >
-                <p id="no-class-message" className="text-base">No classes scheduled.</p>
+                <p>No classes scheduled.</p>
             </motion.div>
         );
     }
@@ -69,20 +67,37 @@ const NextClassWidget = ({ schedules }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-center max-w-sm mx-auto"
-                role="alert"
-                aria-describedby="no-upcoming-class-message"
+                className="p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-center max-w-sm mx-auto"
             >
-                <p id="no-upcoming-class-message" className="text-base">No upcoming class found.</p>
+                <p>No upcoming class found.</p>
             </motion.div>
         );
     }
 
-    // Calculate countdown
-    const timeDiff = upcomingClass.classDate - now;
-    const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
-    const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-    const countdown = hoursLeft > 0 ? `${hoursLeft}h ${minutesLeft}m` : `${minutesLeft}m`;
+    // state for countdown
+    const [timeLeft, setTimeLeft] = useState(upcomingClass.classDate - new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(upcomingClass.classDate - new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [upcomingClass.classDate]);
+
+    // convert ms to h:m:s
+    const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+    const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    let countdown = '';
+    if (hoursLeft > 0) {
+        countdown = `${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
+    } else if (minutesLeft > 0) {
+        countdown = `${minutesLeft}m ${secondsLeft}s`;
+    } else {
+        countdown = `${secondsLeft}s`;
+    }
 
     const dayStyles = dayColors[upcomingClass.day] || dayColors.Monday;
 
@@ -92,12 +107,11 @@ const NextClassWidget = ({ schedules }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={`p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] border ${dayStyles.border} max-w-sm mx-auto font-roboto`}
-            aria-labelledby="next-class-title"
+            className={`p-4 bg-[#F8F9FA] dark:bg-[#2D3748] rounded-lg shadow border ${dayStyles.border} max-w-sm mx-auto font-roboto`}
         >
             <div className="flex items-center gap-2 mb-3">
                 <ClockIcon className={`w-6 h-6 ${dayStyles.text}`} />
-                <h2 id="next-class-title" className="text-lg font-bold text-[#202124] dark:text-[#F9FAFB]">
+                <h2 className="text-lg font-bold text-[#202124] dark:text-[#F9FAFB]">
                     Next Class
                 </h2>
             </div>

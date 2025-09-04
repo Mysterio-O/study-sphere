@@ -3,12 +3,13 @@ import { motion } from 'motion/react';
 import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import { ChartBarIcon,ClockIcon } from '@heroicons/react/24/solid';
+import { ChartBarIcon, ClockIcon } from '@heroicons/react/24/solid';
 import QuizOverView from '../../components/Dashboard/QuizOverView';
 import QuizDetailsModal from '../../components/Dashboard/QuizDetailsModal';
 import ScheduleCard from '../../components/Dashboard/ScheduleCard';
 import SubjectDistributionChart from '../../components/Dashboard/SubjectDistributionChart';
 import NextClassWidget from '../../components/Dashboard/NextClassWidget';
+import WalletCharts from '../../components/Dashboard/WalletCharts';
 
 const Overview = () => {
     const { user } = useAuth();
@@ -40,6 +41,16 @@ const Overview = () => {
         },
     });
 
+    const { data: wallet = { income: [], expense: [], totalAmount: 0 }, isLoading: walletLoading } = useQuery({
+        queryKey: ['wallet', user?.email],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/wallet?email=${user.email}`);
+            return res.data;
+        },
+        enabled: !!user?.email,
+    });
+    console.log(wallet);
+
     const handleCardCLick = (type) => {
         let filtered = [];
         if (type === 'total') {
@@ -58,7 +69,7 @@ const Overview = () => {
         setFilteredQuizzes([]);
     };
 
-    if (isLoading) {
+    if (isLoading || walletLoading) {
         return (
             <motion.div
                 initial={{ opacity: 0 }}
@@ -96,6 +107,13 @@ const Overview = () => {
                             Your Quiz History
                         </h2>
                         <QuizOverView myQuizProgression={myQuizProgression} onCardClick={handleCardCLick} />
+                    </div>
+                    <div className="bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] p-6">
+                        <h2 className="text-xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-4 flex items-center gap-2">
+                            <ChartBarIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
+                            Your Wallet Overview
+                        </h2>
+                        <WalletCharts wallet={wallet}/>
                     </div>
                 </div>
                 {/* Right Column: NextClassWidget and SubjectDistributionChart */}
