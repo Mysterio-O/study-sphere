@@ -67,7 +67,7 @@ const Wallet = () => {
             <div className="flex items-center gap-2 mb-6">
                 <WalletIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
                 <h1 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB]">
-                    Wallet Dashboard
+                    My Wallet
                 </h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

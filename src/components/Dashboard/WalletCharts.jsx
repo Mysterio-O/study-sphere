@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { WalletIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
+import { WalletIcon, ArrowUpIcon, ArrowDownIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Button from '../atoms/Button';
 
 const COLORS = ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#673AB7', '#F06292', '#26A69A', '#8AB4F8', '#6EE7B7', '#FBBF24', '#FCA5A5'];
 
 const WalletCharts = ({ wallet }) => {
-    const { income = [], expense = [], totalAmount = 0 } = wallet;
+    const { income = [], expense = [] } = wallet;
     const [monthlyChartType, setMonthlyChartType] = useState('line'); // 'line' | 'bar'
 
     // Monthly Income vs Expenses
@@ -46,8 +46,18 @@ const WalletCharts = ({ wallet }) => {
 
     const totalIncome = income.reduce((acc, item) => acc + item.amount, 0);
     const totalExpense = expense.reduce((acc, item) => acc + item.amount, 0);
+    let currentBalance = 0;
+    let balanceWarning = ''
+    if (totalIncome > totalExpense) {
+        currentBalance = totalIncome - totalExpense;
+    } else {
+        const dueAmount = totalIncome - totalExpense;
+        console.log(dueAmount);
+        balanceWarning = dueAmount;
+    }
 
-    const hasData = totalIncome > 0 || totalExpense > 0;
+    // console.log('You are on a loan of' + '' + totalIncome - totalExpense);
+
 
     return (
         <motion.div
@@ -57,7 +67,7 @@ const WalletCharts = ({ wallet }) => {
             className="space-y-6 font-roboto"
         >
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -80,6 +90,18 @@ const WalletCharts = ({ wallet }) => {
                     <div>
                         <h3 className="text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">Total Expenses</h3>
                         <p className="text-xl font-bold text-[#EA4335] dark:text-[#FCA5A5]">${totalExpense.toFixed(2)}</p>
+                    </div>
+                </motion.div>
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                    className="bg-[#FFFFFF] dark:bg-[#2D3748] p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] flex items-center gap-3"
+                >
+                    <ArrowRightIcon className={`w-6 h-6 ${currentBalance ? 'text-[#4285F4] dark:text-[#8AB4F8]' : 'text-[#F9AB00] dark:text-[#D97706]'}`} />
+                    <div>
+                        <h3 className="text-sm font-medium text-[#5F6368] dark:text-[#D1D5DB]">{currentBalance ? 'Balance Left' : 'Due Balance'}</h3>
+                        <p className={`text-xl font-bold ${currentBalance ? 'text-[#4285F4] dark:text-[#8AB4F8]' : 'text-[#F9AB00] dark:text-[#D97706]'}`}>${currentBalance ? currentBalance.toFixed(2) : balanceWarning}</p>
                     </div>
                 </motion.div>
             </div>

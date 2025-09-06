@@ -25,9 +25,9 @@ const WalletOverview = ({ wallet }) => {
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="text-2xl font-semibold text-[#4285F4] dark:text-[#8AB4F8]"
+                className={`text-2xl font-semibold ${balance >= 0 ? 'text-[#4285F4] dark:text-[#8AB4F8]' : 'text-[#F9AB00] dark:text-[#D97706]'}`}
             >
-                Balance: ${balance.toFixed(2)}
+                {balance >= 0 ? 'Balance' : 'Due'}: ${balance.toFixed(2)}
             </motion.p>
             <p className="text-base text-[#34A853] dark:text-[#6EE7B7] mt-2">
                 Total Income: ${totalIncome.toFixed(2)}

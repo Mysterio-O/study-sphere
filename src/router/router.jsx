@@ -14,6 +14,7 @@ import Setting from "../pages/Dashboard/Setting";
 import QuestionGenerator from "../pages/Dashboard/QuestionGenerator";
 import StudyPlanner from "../pages/Dashboard/StudyPlanner";
 import Wallet from "../pages/Dashboard/Wallet";
+import Profile from "../pages/Dashboard/Profile";
 
 const router = createBrowserRouter([
     //  main routes
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
             {
                 path: 'my-wallet',
                 Component: Wallet
+            },
+            {
+                path: 'profile',
+                Component: Profile
             }
         ]
     }

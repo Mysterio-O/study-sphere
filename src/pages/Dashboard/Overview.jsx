@@ -10,6 +10,7 @@ import ScheduleCard from '../../components/Dashboard/ScheduleCard';
 import SubjectDistributionChart from '../../components/Dashboard/SubjectDistributionChart';
 import NextClassWidget from '../../components/Dashboard/NextClassWidget';
 import WalletCharts from '../../components/Dashboard/WalletCharts';
+import QuizProgressionCharts from '../../components/Dashboard/QuizProgressionCharts';
 
 const Overview = () => {
     const { user } = useAuth();
@@ -29,6 +30,7 @@ const Overview = () => {
             return res.data;
         },
     });
+    console.log(myQuizProgression);
 
     const { data: schedules = [] } = useQuery({
         queryKey: ['schedules', user?.email],
@@ -107,13 +109,16 @@ const Overview = () => {
                             Your Quiz History
                         </h2>
                         <QuizOverView myQuizProgression={myQuizProgression} onCardClick={handleCardCLick} />
+                        <div>
+                            <QuizProgressionCharts myQuizProgression={myQuizProgression} />
+                        </div>
                     </div>
                     <div className="bg-[#FFFFFF] dark:bg-[#1F2937] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)] p-6">
                         <h2 className="text-xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-4 flex items-center gap-2">
                             <ChartBarIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
                             Your Wallet Overview
                         </h2>
-                        <WalletCharts wallet={wallet}/>
+                        <WalletCharts wallet={wallet} />
                     </div>
                 </div>
                 {/* Right Column: NextClassWidget and SubjectDistributionChart */}
