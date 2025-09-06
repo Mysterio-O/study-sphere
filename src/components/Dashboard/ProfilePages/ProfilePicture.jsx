@@ -13,6 +13,7 @@ const ProfilePicture = () => {
   const handleProfilePictureUpdate = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    console.log(file);
 
     try {
       setLoading(true);
