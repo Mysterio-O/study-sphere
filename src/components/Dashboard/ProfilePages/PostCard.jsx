@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
     HandThumbUpIcon,
@@ -14,7 +14,7 @@ import EditPostModal from "./EditPostModal";
 import Swal from "sweetalert2";
 import { AnimatePresence, motion } from 'motion/react';
 
-const PostCard = ({ post, onEdit, onDelete,editLoading, setEditLoading }) => {
+const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(post?.likes || 0);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,8 +24,27 @@ const PostCard = ({ post, onEdit, onDelete,editLoading, setEditLoading }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { user } = useAuth();
 
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [needsExpansion, setNeedsExpansion] = useState(false);
+    const textRef = useRef(null);
 
-    const isSameProfile = user?.email === post.author.email;
+    // Check if text needs expansion
+    useEffect(() => {
+        if (textRef.current) {
+            // Check if text exceeds 5 lines
+            const lineHeight = parseInt(getComputedStyle(textRef.current).lineHeight);
+            const maxHeight = lineHeight * 5; // 5 lines
+            setNeedsExpansion(textRef.current.scrollHeight > maxHeight);
+        }
+    }, [post?.text]);
+
+    // Toggle text expansion
+    const toggleExpansion = () => {
+        setIsExpanded(!isExpanded);
+    };
+
+
+    // const isSameProfile = user?.email === post.author.email;
     // console.log(isSameProfile);
 
     // Toggle like
@@ -102,7 +121,7 @@ const PostCard = ({ post, onEdit, onDelete,editLoading, setEditLoading }) => {
 
                 {/* 3 Dots Menu */}
                 {
-                    isSameProfile && <div className="relative">
+                    profile && <div className="relative">
                         <motion.button
                             whileHover={{ rotate: 90 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -139,7 +158,23 @@ const PostCard = ({ post, onEdit, onDelete,editLoading, setEditLoading }) => {
 
             {/* Text */}
             {post?.text && (
-                <p className="text-gray-700 dark:text-gray-200 mb-3">{post.text}</p>
+                <div className="mb-3">
+                    <p
+                        ref={textRef}
+                        className={`text-gray-700 dark:text-gray-200 ${!isExpanded && needsExpansion ? 'line-clamp-5' : ''
+                            }`}
+                    >
+                        {post.text}
+                    </p>
+                    {needsExpansion && (
+                        <button
+                            onClick={toggleExpansion}
+                            className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm mt-1 focus:outline-none"
+                        >
+                            {isExpanded ? 'See Less' : 'See More'}
+                        </button>
+                    )}
+                </div>
             )}
 
             {/* Image */}
@@ -233,7 +268,7 @@ const PostCard = ({ post, onEdit, onDelete,editLoading, setEditLoading }) => {
             {/* Edit Modal */}
             <AnimatePresence>
                 {isEditModalOpen && (
-                    <EditPostModal post={post} onClose={setIsEditModalOpen} onSave={handleSaveEdit} editLoading={editLoading} setEditLoading={setEditLoading}/>
+                    <EditPostModal post={post} onClose={setIsEditModalOpen} onSave={handleSaveEdit} editLoading={editLoading} setEditLoading={setEditLoading} />
                 )}
             </AnimatePresence>
         </div>

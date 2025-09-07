@@ -16,6 +16,7 @@ const Profile = () => {
     const axiosSecure = useAxiosSecure();
     const [showPostInput, setShowPostInput] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
+    const profile = true;
 
     const [page, setPage] = useState(1);
     const limit = 10;
@@ -230,7 +231,7 @@ const Profile = () => {
             {/* Posts */}
             <div className="mt-6">
                 {posts.map(post => (
-                    <PostCard key={post._id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} editLoading={editLoading} setEditLoading={setEditLoading} />
+                    <PostCard key={post._id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} editLoading={editLoading} setEditLoading={setEditLoading} profile={profile}/>
                 ))}
             </div>
 

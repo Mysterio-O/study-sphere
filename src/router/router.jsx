@@ -15,6 +15,7 @@ import QuestionGenerator from "../pages/Dashboard/QuestionGenerator";
 import StudyPlanner from "../pages/Dashboard/StudyPlanner";
 import Wallet from "../pages/Dashboard/Wallet";
 import Profile from "../pages/Dashboard/Profile";
+import Posts from "../pages/Posts/Posts";
 
 const router = createBrowserRouter([
     //  main routes
@@ -22,7 +23,13 @@ const router = createBrowserRouter([
         path: "/",
         Component: RootLayout,
         children: [
-            { index: true, Component: Home }
+            { index: true, Component: Home },
+            {
+                path: '/posts',
+                element: <PrivateRoute>
+                    <Posts />
+                </PrivateRoute>
+            }
         ]
     },
 

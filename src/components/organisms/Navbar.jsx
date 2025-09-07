@@ -13,7 +13,7 @@ const navLinks = [
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Schedule', path: '/schedule' },
     { name: 'Budget', path: '/budget' },
-    { name: 'Study Planner', path: '/study-planner' },
+    { name: 'Posts', path: 'posts' },
 ];
 
 // Animation variants for navbar

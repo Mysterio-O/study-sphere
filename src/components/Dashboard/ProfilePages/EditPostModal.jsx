@@ -73,7 +73,7 @@ const EditPostModal = ({ post, onClose, onSave, editLoading, setEditLoading }) =
                         value={newText}
                         onChange={(e) => setNewText(e.target.value)}
                         rows={4}
-                        className="w-full border rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none"
+                        className="w-full border rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none dark:text-white"
                         placeholder="What's on your mind?"
                     />
 
@@ -93,7 +93,7 @@ const EditPostModal = ({ post, onClose, onSave, editLoading, setEditLoading }) =
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="mb-4"
+                        className="mb-4 dark:text-white"
                     />
 
                     {/* Actions */}
