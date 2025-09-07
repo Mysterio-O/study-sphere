@@ -8,6 +8,7 @@ import WalletOverview from '../../components/Dashboard/WalletOverview';
 import AddIncomeForm from '../../components/Dashboard/AddIncomeForm';
 import AddExpenseForm from '../../components/Dashboard/AddExpenseForm';
 import TransactionHistory from '../../components/Dashboard/TransactionHistory';
+import WalletSkeleton from '../../components/skeletons/WalletSkeleton';
 
 const Wallet = () => {
     const axiosSecure = useAxiosSecure();
@@ -42,20 +43,7 @@ const Wallet = () => {
         },
     });
 
-    if (isLoading) {
-        return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="flex justify-center items-center h-screen"
-            >
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-base">
-                    Loading wallet...
-                </p>
-            </motion.div>
-        );
-    }
+    if (isLoading) return <WalletSkeleton />
 
     return (
         <motion.section

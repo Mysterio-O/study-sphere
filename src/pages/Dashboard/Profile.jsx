@@ -9,12 +9,13 @@ import PostInput from '../../components/Dashboard/ProfilePages/PostInput';
 import Swal from 'sweetalert2';
 import Button from '../../components/atoms/Button';
 import PostCard from '../../components/Dashboard/ProfilePages/PostCard';
+import ProfileSkeleton from '../../components/skeletons/ProfileSkeleton';
 
 const Profile = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [showPostInput, setShowPostInput] = useState(false);
-    const [editLoading,setEditLoading] = useState(false)
+    const [editLoading, setEditLoading] = useState(false)
 
     const [page, setPage] = useState(1);
     const limit = 10;
@@ -173,9 +174,7 @@ const Profile = () => {
     const totalPages = data?.totalPages || 1;
     console.log(posts);
 
-    if (coverLoading || postLoading) {
-        return 'loading...'
-    }
+    if (coverLoading || postLoading) return <ProfileSkeleton />
 
     return (
         <motion.section
@@ -231,7 +230,7 @@ const Profile = () => {
             {/* Posts */}
             <div className="mt-6">
                 {posts.map(post => (
-                    <PostCard key={post._id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} editLoading={editLoading} setEditLoading={setEditLoading}/>
+                    <PostCard key={post._id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} editLoading={editLoading} setEditLoading={setEditLoading} />
                 ))}
             </div>
 

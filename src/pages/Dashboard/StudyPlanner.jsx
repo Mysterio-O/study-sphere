@@ -330,15 +330,36 @@ const StudyPlanner = () => {
                         Your Study Plans
                     </h2>
                     {isLoading ? (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="text-center text-[#5F6368] dark:text-[#D1D5DB] text-base"
-                            role="status"
-                            aria-live="polite"
-                        >
-                            Loading...
-                        </motion.div>
+                        <div className="space-y-4">
+                            {[1, 2, 3].map((item) => (
+                                <motion.div
+                                    key={item}
+                                    className="p-4 border border-[#DADCE0] dark:border-[#374151] rounded-lg bg-[#F8F9FA] dark:bg-[#2D3748] shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_8px_rgba(255,255,255,0.1)] animate-pulse"
+                                >
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex-1">
+                                            {/* Subject and Topic Skeleton */}
+                                            <div className="h-5 w-48 bg-gray-300 dark:bg-gray-700 rounded mb-3"></div>
+
+                                            {/* Priority and Deadline Skeleton */}
+                                            <div className="h-4 w-64 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
+
+                                            {/* Time Slot Skeleton */}
+                                            <div className="h-4 w-40 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
+
+                                            {/* Status Skeleton */}
+                                            <div className="h-6 w-20 bg-gray-300 dark:bg-gray-700 rounded-full mt-1"></div>
+                                        </div>
+
+                                        {/* Action Buttons Skeleton */}
+                                        <div className="flex gap-2">
+                                            <div className="h-8 w-20 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                                            <div className="h-8 w-20 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
                     ) : plans.length === 0 ? (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

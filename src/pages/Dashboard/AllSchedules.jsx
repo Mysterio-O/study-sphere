@@ -9,6 +9,7 @@ import animation from '../../assets/animation/schedule.json';
 import Button from '../../components/atoms/Button';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
+import AllSchedulesSkeleton from '../../components/skeletons/AllSchedulesSkeleton';
 
 const AllSchedules = () => {
     const { user } = useAuth();
@@ -51,6 +52,7 @@ const AllSchedules = () => {
         enabled: !!user?.email,
     });
 
+    // delete schedule
     const { mutateAsync: handleRemoveSchedule } = useMutation({
         mutationKey: ['my-schedules', user?.email],
         mutationFn: async (data) => {
@@ -86,15 +88,7 @@ const AllSchedules = () => {
         }
     });
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] roboto text-base">
-                    Loading...
-                </p>
-            </div>
-        );
-    }
+    if (isLoading) return <AllSchedulesSkeleton />
 
     if (!schedules || schedules.length === 0) {
         return (

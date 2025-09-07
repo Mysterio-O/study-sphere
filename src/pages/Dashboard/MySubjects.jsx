@@ -11,6 +11,7 @@ import FormModal from '../../components/molecules/FormModal';
 import ScheduleModal from '../../components/molecules/ScheduleModal';
 import Button from '../../components/atoms/Button';
 import { Link } from 'react-router';
+import MySubjectsSkeleton from '../../components/skeletons/MySubjectsSkeleton';
 
 const MySubjects = () => {
     const axiosSecure = useAxiosSecure();
@@ -31,7 +32,7 @@ const MySubjects = () => {
         enabled: !!user?.email,
     });
 
-    const { mutateAsync: handleSubjectChange, isLoading: deleteLoading } = useMutation({
+    const { mutateAsync: handleSubjectChange } = useMutation({
         mutationKey: ['my-subjects', user?.email],
         mutationFn: async (data) => {
             const res = await axiosSecure.delete(`/delete-subject?email=${user?.email}`, { data })
@@ -162,13 +163,7 @@ const MySubjects = () => {
         }
     }
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] roboto">Loading...</p>
-            </div>
-        );
-    }
+    if (isLoading) return <MySubjectsSkeleton />
 
     return (
         <motion.section

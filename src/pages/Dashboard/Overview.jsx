@@ -11,6 +11,7 @@ import SubjectDistributionChart from '../../components/Dashboard/SubjectDistribu
 import NextClassWidget from '../../components/Dashboard/NextClassWidget';
 import WalletCharts from '../../components/Dashboard/WalletCharts';
 import QuizProgressionCharts from '../../components/Dashboard/QuizProgressionCharts';
+import OverviewSkeleton from '../../components/skeletons/OverviewSkeleton';
 
 const Overview = () => {
     const { user } = useAuth();
@@ -32,7 +33,7 @@ const Overview = () => {
     });
     console.log(myQuizProgression);
 
-    const { data: schedules = [] } = useQuery({
+    const { data: schedules = [], isLoading: scheduleLoading } = useQuery({
         queryKey: ['schedules', user?.email],
         enabled: !!user?.email,
         queryFn: async () => {
@@ -71,20 +72,7 @@ const Overview = () => {
         setFilteredQuizzes([]);
     };
 
-    if (isLoading || walletLoading) {
-        return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="flex justify-center items-center h-screen"
-            >
-                <p className="text-[#5F6368] dark:text-[#D1D5DB] font-roboto text-base">
-                    Loading...
-                </p>
-            </motion.div>
-        );
-    }
+    if (isLoading || walletLoading || scheduleLoading) return <OverviewSkeleton />
 
     return (
         <motion.section
