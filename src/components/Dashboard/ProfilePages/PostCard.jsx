@@ -16,11 +16,11 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import PostCardSkeleton from "../../skeletons/PostCardSkeleton";
+import CommentCard from "../../shared/CommentCard";
 
 const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [comments, setComments] = useState(post?.comments || []);
     const [newComment, setNewComment] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const { user } = useAuth();
@@ -56,6 +56,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         }
     });
 
+    // get likes
     const { data: likes = [], isLoading } = useQuery({
         queryKey: ['like', post._id],
         enabled: !!post._id,
@@ -68,11 +69,75 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         onError: (err) => {
             console.error(err.message);
         }
+    });
+
+    // get comments 
+    const { data: comments = [], isLoading: commentLoading } = useQuery({
+        queryKey: ['comments', post._id],
+        enabled: !!post?._id,
+        queryFn: async () => {
+            const res = await axiosSecure.get('/all-comments', {
+                params: { id: post?._id }
+            });
+            return res.data;
+        }
+    });
+
+    // add comment
+    const { mutateAsync: postComment } = useMutation({
+        mutationKey: ['comments', post?._id],
+        enabled: !!post?._id,
+        mutationFn: async (commentData) => {
+            const res = await axiosSecure.post(`/add-comment?id=${post?._id}`, commentData);
+            return res.data
+        },
+        onSuccess: () => {
+            console.log("commented");
+            queryClient.invalidateQueries(['comments', post?._id])
+            setNewComment("");
+        },
+        onError: (err) => {
+            console.log(err);
+        }
+    });
+
+    // edit comment
+    const { mutateAsync: editComment } = useMutation({
+        mutationKey: ['comments', post?._id],
+        enabled: !!post?._id,
+        mutationFn: async (commentData) => {
+            console.log(commentData);
+            const res = await axiosSecure.patch(`/edit-comment?postId=${post?._id}`, commentData);
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['comments', post?._id]);
+        },
+        onError: (err) => {
+            console.error(err);
+        }
+    });
+
+    // delete comment
+    const { mutateAsync: deleteComment } = useMutation({
+        mutationKey: ['comments', post?._id],
+        enabled: !!post?._id,
+        mutationFn: async (commentId) => {
+            const res = await axiosSecure.delete(`/delete-comment?postId=${post?._id}&commentId=${commentId}`);
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['comments', post?._id]);
+        },
+        onError: (err) => {
+            console.error(err);
+        }
     })
 
-    if (isLoading) return <PostCardSkeleton />
+    if (isLoading || commentLoading) return <PostCardSkeleton />
 
-    console.log(likes);
+    // console.log(likes);
+    console.log(comments);
 
     const alreadyLikedByCurrentUser = likes?.includes(user?.email) || false;
     const totalLikes = likes?.length || 0;
@@ -82,12 +147,14 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
     const handleAddComment = () => {
         if (!newComment.trim()) return;
         const comment = {
-            id: Date.now(),
             text: newComment,
             author: user?.displayName,
+            authorEmail: user?.email
         };
-        setComments([comment, ...comments]);
-        setNewComment("");
+        if (comment?.text?.length > 0 && user?.displayName && user?.email) {
+            postComment(comment)
+        }
+        console.log(comment);
     };
 
     // Save edits
@@ -267,57 +334,63 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
             </div>
 
             {/* Comment Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
-                        {/* Close */}
-                        <button
-                            onClick={() => setIsModalOpen(false)}
-                            className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
-                        >
-                            <XMarkIcon className="w-6 h-6" />
-                        </button>
-
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                            Comments
-                        </h2>
-
-                        {/* Comment List */}
-                        <div className="space-y-3 max-h-60 overflow-y-auto mb-4">
-                            {comments.length > 0 ? (
-                                comments.map((c) => (
-                                    <div
-                                        key={c.id}
-                                        className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg"
-                                    >
-                                        <p className="text-sm font-semibold">{c.author}</p>
-                                        <p className="text-sm">{c.text}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-gray-500 text-sm">No comments yet.</p>
-                            )}
-                        </div>
-
-                        {/* Add Comment */}
-                        <div className="flex space-x-2">
-                            <input
-                                type="text"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                placeholder="Write a comment..."
-                                className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none"
-                            />
+            <AnimatePresence>
+                {isModalOpen && (
+                    <motion.div
+                        initial={{ scale: 0.85, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.75, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-sm bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
+                            {/* Close */}
                             <button
-                                onClick={handleAddComment}
-                                className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
+                                onClick={() => setIsModalOpen(false)}
+                                className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
                             >
-                                Post
+                                <XMarkIcon className="w-6 h-6" />
                             </button>
+
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                Comments
+                            </h2>
+
+                            {/* Comment List */}
+                            <div className="space-y-3 max-h-60 overflow-y-scroll mb-4">
+                                {comments.length > 0 ? (
+                                    comments.map((c) => (
+                                        <CommentCard
+                                            key={c?._id}
+                                            comment={c}
+                                            onDelete={deleteComment}
+                                            onEdit={editComment}
+                                        />
+                                    ))
+                                ) : (
+                                    <p className="text-gray-500 text-sm">No comments yet.</p>
+                                )}
+                            </div>
+
+                            {/* Add Comment */}
+                            <div className="flex space-x-2">
+                                <input
+                                    type="text"
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    placeholder="Write a comment..."
+                                    className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none dark:text-white"
+                                />
+                                <button
+                                    onClick={handleAddComment}
+                                    className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
+                                >
+                                    Post
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Edit Modal */}
             <AnimatePresence>

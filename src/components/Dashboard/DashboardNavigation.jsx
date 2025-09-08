@@ -80,12 +80,23 @@ const DashboardNavigation = ({ setIsSidebarOpen, isSidebarOpen }) => {
             {/* Navigation Links */}
             <main className="px-2 py-4 overflow-y-auto">
                 <nav>
-                    <ul className="flex flex-col gap-2">
+                    <motion.ul
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0 },
+                            visible: {
+                                opacity: 1,
+                                transition: { staggerChildren: 0.05 },
+                            },
+                        }}
+                        className="flex flex-col gap-2">
                         {links.map((link, idx) => (
                             <motion.li
-                                initial={{ x: -100, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ duration: 0.3, delay: 0.2 * idx }}
+                                variants={{
+                                    hidden: { x: -20, opacity: 0 },
+                                    visible: { x: 0, opacity: 1 },
+                                }}
                                 onClick={handleSidebarToggle}
                                 key={idx}>
                                 <Link
@@ -101,7 +112,7 @@ const DashboardNavigation = ({ setIsSidebarOpen, isSidebarOpen }) => {
                                 </Link>
                             </motion.li>
                         ))}
-                    </ul>
+                    </motion.ul>
                 </nav>
             </main>
 
