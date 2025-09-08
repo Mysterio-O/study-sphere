@@ -46,7 +46,9 @@ const StudyPlannerPreview = () => {
         <section className="py-12 px-6 md:px-20 lg:px-32 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg w-full">
             <div className="flex items-center justify-center gap-2 mb-6">
                 <BookOpenIcon className="w-6 h-6 text-[#4285F4] dark:text-[#8AB4F8]" />
-                <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB]">
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent 
+                    bg-gradient-to-r from-primary to-secondary 
+                    dark:from-primary-dark dark:to-secondary-dark">
                     Study Planner Preview
                 </h2>
             </div>
