@@ -8,11 +8,14 @@ import { motion, AnimatePresence } from "motion/react";
 import Swal from "sweetalert2";
 import { formatDistanceToNow } from "date-fns";
 import { FaClockRotateLeft } from "react-icons/fa6";
+import useAuth from "../../hooks/useAuth";
 
 const CommentCard = ({ comment, onEdit, onDelete }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.text);
+    const {user}=useAuth();
+    console.log(comment?.authorEmail);
 
     // delete with swal confirm
     const handleDelete = (id) => {
@@ -110,7 +113,7 @@ const CommentCard = ({ comment, onEdit, onDelete }) => {
                 </div>
 
                 {/* 3 Dots Menu */}
-                {!isEditing && (
+                {!isEditing && (user?.email === comment?.authorEmail) && (
                     <div className="relative">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.75, rotate: 120 }}

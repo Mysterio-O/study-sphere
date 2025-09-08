@@ -128,6 +128,17 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['comments', post?._id]);
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted',
+                text: 'Your comment has been deleted successfully.',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
         },
         onError: (err) => {
             console.error(err);
@@ -342,7 +353,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
                         exit={{ scale: 0.75, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-sm bg-opacity-50 flex justify-center items-center z-50">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md md:max-w-2xl lg:max-w-4xl relative">
                             {/* Close */}
                             <button
                                 onClick={() => setIsModalOpen(false)}
