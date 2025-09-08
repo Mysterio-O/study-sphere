@@ -44,7 +44,7 @@ const slides = [
 
 const Banner = () => {
     return (
-        <div className="relative w-full">
+        <div className="relative w-full py-20 md:py-10">
             <Swiper
                 modules={[Autoplay, Pagination, Navigation]}
                 autoplay={{ delay: 5000, disableOnInteraction: false }}

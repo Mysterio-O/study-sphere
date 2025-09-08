@@ -230,9 +230,48 @@ const Profile = () => {
 
             {/* Posts */}
             <div className="mt-6">
-                {posts.map(post => (
-                    <PostCard key={post._id} post={post} onEdit={handleEditPost} onDelete={handleDeletePost} editLoading={editLoading} setEditLoading={setEditLoading} profile={profile}/>
-                ))}
+                {posts.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-24 h-24 text-[#FBBC04] dark:text-[#F4D03F] mb-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M9 12h6m-3-3v6m6 6H6a2 2 0 01-2-2V6a2 2 0 012-2h7"
+                            />
+                        </svg>
+                        <h3 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-2">
+                            No Posts Yet
+                        </h3>
+                        <p className="text-[#5F6368] dark:text-[#D1D5DB] mb-4">
+                            It looks like you haven't created any posts yet. Share your thoughts or updates with the community!
+                        </p>
+                        <Button
+                            variant="secondary"
+                            text="Create Your First Post"
+                            onClick={() => setShowPostInput(true)}
+                        />
+                    </div>
+                ) : (
+                    posts.map(post => (
+                        <PostCard
+                            key={post._id}
+                            post={post}
+                            onEdit={handleEditPost}
+                            onDelete={handleDeletePost}
+                            editLoading={editLoading}
+                            setEditLoading={setEditLoading}
+                            profile={profile}
+                        />
+                    ))
+                )}
+
             </div>
 
             {/* Pagination Controls */}
