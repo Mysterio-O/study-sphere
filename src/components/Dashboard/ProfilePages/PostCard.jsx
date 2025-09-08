@@ -13,30 +13,22 @@ import useAuth from "../../../hooks/useAuth";
 import EditPostModal from "./EditPostModal";
 import Swal from "sweetalert2";
 import { AnimatePresence, motion } from 'motion/react';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import PostCardSkeleton from "../../skeletons/PostCardSkeleton";
 
 const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(post?.likes || 0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [comments, setComments] = useState(post?.comments || []);
     const [newComment, setNewComment] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const queryClient = useQueryClient();
 
     const [isExpanded, setIsExpanded] = useState(false);
-    const [needsExpansion, setNeedsExpansion] = useState(false);
-    const textRef = useRef(null);
 
-    // Check if text needs expansion
-    useEffect(() => {
-        if (textRef.current) {
-            // Check if text exceeds 5 lines
-            const lineHeight = parseInt(getComputedStyle(textRef.current).lineHeight);
-            const maxHeight = lineHeight * 5; // 5 lines
-            setNeedsExpansion(textRef.current.scrollHeight > maxHeight);
-        }
-    }, [post?.text]);
 
     // Toggle text expansion
     const toggleExpansion = () => {
@@ -47,11 +39,44 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
     // const isSameProfile = user?.email === post.author.email;
     // console.log(isSameProfile);
 
-    // Toggle like
-    const handleLike = () => {
-        setIsLiked(!isLiked);
-        setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
-    };
+
+    const { mutateAsync: handleToggleLike } = useMutation({
+        mutationKey: ['like', user?.email],
+        enabled: !!user?.email,
+        mutationFn: async (id) => {
+            const res = await axiosSecure.patch(`/manage-like?id=${id}&email=${user?.email}`);
+            return res.data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['like', post._id])
+            console.log(data);
+        },
+        onError: (err) => {
+            console.error(err);
+        }
+    });
+
+    const { data: likes = [], isLoading } = useQuery({
+        queryKey: ['like', post._id],
+        enabled: !!post._id,
+        queryFn: async () => {
+            const res = await axiosSecure.get('/total-likes', {
+                params: { id: post._id }
+            });
+            return res.data;
+        },
+        onError: (err) => {
+            console.error(err.message);
+        }
+    })
+
+    if (isLoading) return <PostCardSkeleton />
+
+    console.log(likes);
+
+    const alreadyLikedByCurrentUser = likes?.includes(user?.email) || false;
+    const totalLikes = likes?.length || 0;
+    console.log(alreadyLikedByCurrentUser, totalLikes);
 
     // Add comment
     const handleAddComment = () => {
@@ -96,13 +121,25 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
 
     }
 
+    const buttonVariants = {
+        initial: { opacity: 0, scale: 0.5 },
+        inView: { opacity: 1, scale: 1 }
+    }
+
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6 mb-6 relative">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6 mb-6 relative">
             {/* Top Row: Author + Menu */}
             <div className="flex justify-between items-start mb-4">
                 {/* Author Info */}
                 <div className="flex items-center">
-                    <img
+                    <motion.img
+                        initial={{ opacity: 0, scale: 0.90 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
                         src={post?.author?.photoURL}
                         alt={post?.author?.name}
                         className="w-10 h-10 rounded-full object-cover border border-[#DADCE0] dark:border-[#374151]"
@@ -160,26 +197,30 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
             {post?.text && (
                 <div className="mb-3">
                     <p
-                        ref={textRef}
-                        className={`text-gray-700 dark:text-gray-200 ${!isExpanded && needsExpansion ? 'line-clamp-5' : ''
+                        className={`text-gray-700 dark:text-gray-200 transition-all ${isExpanded ? "" : "line-clamp-5"
                             }`}
                     >
                         {post.text}
                     </p>
-                    {needsExpansion && (
+
+                    {post.text.length > 200 && ( // show button if text is long
                         <button
                             onClick={toggleExpansion}
                             className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm mt-1 focus:outline-none"
                         >
-                            {isExpanded ? 'See Less' : 'See More'}
+                            {isExpanded ? "See Less" : "See More"}
                         </button>
                     )}
                 </div>
             )}
 
+
             {/* Image */}
             {post?.image && (
-                <img
+                <motion.img
+                    initial={{ opacity: 0.4 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
                     src={post.image}
                     alt="post"
                     className="w-full rounded-lg object-cover max-h-96 mb-3"
@@ -188,28 +229,41 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
 
             {/* Actions */}
             <div className="flex justify-around border-t border-gray-200 dark:border-gray-700 pt-3">
-                <button
-                    onClick={handleLike}
-                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500"
+                <motion.button
+                    variants={buttonVariants}
+                    initial="initial"
+                    whileInView="inView"
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    onClick={() => handleToggleLike(post._id)}
+                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500 cursor-pointer"
                 >
                     <HandThumbUpIcon
-                        className={`w-5 h-5 ${isLiked ? "text-blue-500" : ""}`}
+                        className={`w-5 h-5 ${alreadyLikedByCurrentUser ? "text-blue-500" : ""}`}
                     />
-                    <span>{likeCount}</span>
-                </button>
+                    <span>{totalLikes}</span>
+                </motion.button>
 
-                <button
+                <motion.button
+                    variants={buttonVariants}
+                    initial="initial"
+                    whileInView="inView"
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500"
+                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500 cursor-pointer"
                 >
                     <ChatBubbleOvalLeftIcon className="w-5 h-5" />
                     <span>{comments.length}</span>
-                </button>
+                </motion.button>
 
-                <button className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500">
+                <motion.button
+                    variants={buttonVariants}
+                    initial="initial"
+                    whileInView="inView"
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-500 cursor-pointer">
                     <ShareIcon className="w-5 h-5" />
                     <span>Share</span>
-                </button>
+                </motion.button>
             </div>
 
             {/* Comment Modal */}
@@ -271,7 +325,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
                     <EditPostModal post={post} onClose={setIsEditModalOpen} onSave={handleSaveEdit} editLoading={editLoading} setEditLoading={setEditLoading} />
                 )}
             </AnimatePresence>
-        </div>
+        </motion.div>
     );
 };
 
