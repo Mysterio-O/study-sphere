@@ -16,7 +16,7 @@ const slides = [
     {
         id: 1,
         title: "Smart Scheduling",
-        description: "Plan your study sessions with AI-powered schedules.",
+        description: "Plan your study sessions with schedules.",
         image: scheduleImage,
         buttonText: "View Schedule",
         buttonVariant: "primary",
@@ -25,7 +25,7 @@ const slides = [
     {
         id: 2,
         title: "Q&A Generator",
-        description: "Test yourself with random practice questions anytime.",
+        description: "Test yourself with random practice questions AI Generated questions anytime.",
         image: randomQuestionsImage,
         buttonText: "Practice Now",
         buttonVariant: "secondary",
@@ -34,7 +34,7 @@ const slides = [
     {
         id: 3,
         title: "Wallet Overview",
-        description: "Engage and share with peers in the wallet community.",
+        description: "Keep track on your pocket-money.",
         image: walletImage,
         buttonText: "Join Community",
         buttonVariant: "outline",

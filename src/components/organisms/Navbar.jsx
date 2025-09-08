@@ -11,7 +11,7 @@ import LogoutButton from '../../shared/LogoutButton';
 // Navigation links for Navbar
 const navLinks = [
     { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Schedule', path: '/schedule' },
+    { name: 'About Us', path: '/about-us' },
     { name: 'Budget', path: '/budget' },
     { name: 'Posts', path: 'posts' },
 ];

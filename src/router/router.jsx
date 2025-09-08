@@ -16,6 +16,7 @@ import StudyPlanner from "../pages/Dashboard/StudyPlanner";
 import Wallet from "../pages/Dashboard/Wallet";
 import Profile from "../pages/Dashboard/Profile";
 import Posts from "../pages/Posts/Posts";
+import AboutUs from "../pages/AboutUs/AboutUs";
 
 const router = createBrowserRouter([
     //  main routes
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
                 element: <PrivateRoute>
                     <Posts />
                 </PrivateRoute>
+            },
+            {
+                path: '/about-us',
+                Component: AboutUs
             }
         ]
     },
