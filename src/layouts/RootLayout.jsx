@@ -2,6 +2,7 @@ import React from 'react';
 import Scroll from '../pages/Scroll/Scroll';
 import { Outlet } from 'react-router';
 import Navbar from '../components/organisms/Navbar';
+import Footer from '../components/organisms/Footer';
 
 const RootLayout = () => {
     return (
@@ -15,8 +16,7 @@ const RootLayout = () => {
                     <Outlet />
                 </section>
                 <footer>
-                    {/* <Footer /> */}
-                    {/* place your footer here */}
+                    <Footer />
                 </footer>
             </div>
         </div>

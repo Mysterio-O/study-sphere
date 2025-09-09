@@ -11,8 +11,8 @@ const Home = () => {
             <Banner />
             <Features />
             <StudyPlannerPreview />
-            <Testimonials />
             <Statistics />
+            <Testimonials />
         </div>
     );
 };

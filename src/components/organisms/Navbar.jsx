@@ -12,7 +12,7 @@ import LogoutButton from '../../shared/LogoutButton';
 const navLinks = [
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'About Us', path: '/about-us' },
-    { name: 'Budget', path: '/budget' },
+    { name: 'Contact Us', path: '/contact-us' },
     { name: 'Posts', path: 'posts' },
 ];
 
