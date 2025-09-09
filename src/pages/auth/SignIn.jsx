@@ -6,6 +6,7 @@ import GoogleButton from '../../components/shared/GoogleButton';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 const SignIn = () => {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ const SignIn = () => {
         password: ''
     });
     const [loading, setLoading] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,8 +97,15 @@ const SignIn = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-                <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" />
-                <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
+                <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" isRequired={true}/>
+                <div className='relative'>
+                    <Input type={!showPassword ? 'password' : 'text'} name="password" value={formData.password} onChange={handleChange} placeholder="********" isRequired={true}/>
+                    <span onClick={()=> setShowPassword(!showPassword)} className='absolute  right-3 top-3'>
+                        {
+                            !showPassword ? <FaRegEye /> : <FaRegEyeSlash />
+                        }
+                    </span>
+                </div>
                 <Button variant="primary" type="submit" text="Sign In" disabled={loading} loading={loading} />
             </form>
 

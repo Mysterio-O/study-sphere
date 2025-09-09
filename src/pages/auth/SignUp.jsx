@@ -9,6 +9,7 @@ import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import Swal from 'sweetalert2';
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 
 const SignUp = () => {
@@ -28,6 +29,8 @@ const SignUp = () => {
         year: '',
         institutionType: '',
     });
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const location = useLocation();
     // console.log(location);
@@ -196,13 +199,20 @@ const SignUp = () => {
         >
             <h2 className="text-2xl font-bold text-[#202124] dark:text-[#F9FAFB] mb-6">Sign Up for StudySphere</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-                <Input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Enter Your Username" />
+                <Input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Enter Your Username" isRequired={true} />
                 <FileInput
                     onChange={(e) => setFormData({ ...formData, photo: e.target.files[0] })}
                     name='photo' type='file' />
 
-                <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" />
-                <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
+                <Input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter Your Email" isRequired={true} />
+                <div className='relative'>
+                    <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" isRequired={true} />
+                    <span onClick={() => setShowPassword(!showPassword)} className='absolute  right-3 top-3'>
+                        {
+                            !showPassword ? <FaRegEye /> : <FaRegEyeSlash />
+                        }
+                    </span>
+                </div>
                 {passErr && (
                     <p className="text-red-500 text-sm font-medium">{passErr}</p>
                 )}
@@ -213,6 +223,7 @@ const SignUp = () => {
                     <select
                         name="institutionType"
                         value={institutionType}
+                        required
                         onChange={(e) => setInstitutionType(e.target.value)}
                         className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] roboto text-base"
                         aria-label="Select Institution Type"
@@ -222,9 +233,9 @@ const SignUp = () => {
                         <option value="University">University</option>
                     </select>
                 </div>
-                <Input type="text" name="institutionName" value={formData.institutionName} onChange={handleChange} placeholder="Enter Institution Name" />
+                <Input type="text" name="institutionName" value={formData.institutionName} onChange={handleChange} placeholder="Enter Institution Name" isRequired={true} />
                 {institutionType === 'School' ? (
-                    <Input type="text" name="classGrade" value={formData.classGrade} onChange={handleChange} placeholder="Enter Class (e.g., Grade 10)" />
+                    <Input type="text" name="classGrade" value={formData.classGrade} onChange={handleChange} placeholder="Enter Class (e.g., Grade 10)" isRequired={true} />
                 ) : (
                     <div className="flex items-center justify-center gap-4">
                         <div className="flex-1">
@@ -235,6 +246,7 @@ const SignUp = () => {
                                 name="year"
                                 value={formData.year}
                                 onChange={handleChange}
+                                required
                                 className="w-full px-4 py-2 rounded-md bg-[#F8F9FA] dark:bg-[#1F2937] text-[#202124] dark:text-[#F9FAFB] border border-[#DADCE0] dark:border-[#374151] focus:outline-none focus:ring-2 focus:ring-[#4285F4] roboto text-base"
                                 aria-label="Select Year"
                             >
@@ -248,7 +260,7 @@ const SignUp = () => {
                             <label className="text-[#5F6368] dark:text-[#D1D5DB] text-sm font-medium">
                                 Department
                             </label>
-                            <Input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="Enter Department (e.g., Computer Science)" />
+                            <Input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="Enter Department (e.g., Computer Science)" isRequired={true} />
                         </div>
                     </div>
                 )}
