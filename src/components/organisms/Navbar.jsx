@@ -239,15 +239,15 @@ function Navbar() {
 
                                 </Button>
                             ) : (
-                                <Button
-                                    variant="primary"
-                                    size="md"
-                                    className="w-full text-left mt-2"
-                                >
-                                    <Link to="/auth" onClick={toggleMobileMenu}>
-                                        Login
-                                    </Link>
-                                </Button>
+                                <Link to="/auth/signin" onClick={toggleMobileMenu}>
+                                    <Button
+                                        variant="primary"
+                                        size="md"
+                                        className="w-full text-left mt-2"
+                                        text="Login"
+                                    />
+                                </Link>
+
                             )}
                         </motion.div>
                     )}

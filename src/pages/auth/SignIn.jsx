@@ -3,13 +3,16 @@ import { motion } from 'motion/react';
 import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import GoogleButton from '../../components/shared/GoogleButton';
-import { useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 
 const SignIn = () => {
     const navigate = useNavigate();
     const { loginUser } = useAuth();
+    const location = useLocation();
+    // console.log(location);
+    const from = location?.state;
 
     const [formData, setFormData] = useState({
         email: '',
@@ -41,7 +44,7 @@ const SignIn = () => {
                             confirmButton: 'swal-confirm-button'
                         }
                     });
-                    navigate('/');
+                    navigate(from ? from : '/');
                 })
                 .catch(err => {
                     console.error("error logging in", err);
@@ -76,10 +79,6 @@ const SignIn = () => {
 
     const handleNavigate = () => {
         navigate('/');
-    };
-
-    const handleNavigateSignup = () => {
-        navigate('/auth/signup');
     };
 
     return (
@@ -119,12 +118,13 @@ const SignIn = () => {
             <div className="mt-6 flex flex-col items-center gap-3 w-full">
                 <p className="text-sm text-[#5F6368] dark:text-[#D1D5DB]">
                     Don’t have an account?{' '}
-                    <button
-                        onClick={handleNavigateSignup}
+                    <Link
+                        to="/auth/signup"
+                        state={from}
                         className="text-[#4285F4] dark:text-[#8AB4F8] hover:underline font-medium"
                     >
                         Sign Up
-                    </button>
+                    </Link>
                 </p>
 
                 <Button

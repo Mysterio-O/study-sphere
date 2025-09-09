@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import Input from '../../components/atoms/Input';
 import Button from '../../components/atoms/Button';
 import GoogleButton from '../../components/shared/GoogleButton';
@@ -28,6 +28,10 @@ const SignUp = () => {
         year: '',
         institutionType: '',
     });
+
+    const location = useLocation();
+    // console.log(location);
+    const from = location?.state;
 
     const [passErr, setPassErr] = useState('');
 
@@ -136,7 +140,7 @@ const SignUp = () => {
                                 });
                             }
                             setLoading(false);
-                            navigate('/')
+                            navigate(from ? from : '/')
 
                         })
 
@@ -264,7 +268,7 @@ const SignUp = () => {
             <div className="relative mt-5 flex justify-center text-sm">
                 <span className="px-2 bg-[#FFFFFF] dark:bg-[#1F2937] text-[#5F6368] dark:text-[#D1D5DB]">
                     Already have an account?{' '}
-                    <Link to="/auth/signin" className="text-[#4285F4] dark:text-[#8AB4F8] hover:underline">
+                    <Link state={from} to="/auth/signin" className="text-[#4285F4] dark:text-[#8AB4F8] hover:underline">
                         Sign In
                     </Link>
                 </span>

@@ -117,7 +117,7 @@ const DashboardNavigation = ({ setIsSidebarOpen, isSidebarOpen }) => {
             </main>
 
             {/* footer part */}
-            <footer className='absolute bottom-0 py-3 px-2 flex justify-between w-full'>
+            <footer className='absolute lg:bottom-0 py-3 px-5 lg:px-2 flex justify-between w-full'>
                 <Link to="/">
                     <Button variant='secondary' text="Back to Home" />
                 </Link>
