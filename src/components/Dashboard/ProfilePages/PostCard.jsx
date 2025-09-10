@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import PostCardSkeleton from "../../skeletons/PostCardSkeleton";
 import CommentCard from "../../shared/CommentCard";
+import { VscVerifiedFilled } from "react-icons/vsc";
 
 const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +39,20 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
 
     // const isSameProfile = user?.email === post.author.email;
     // console.log(isSameProfile);
+    const authorEmail = post?.author?.email;
+    // console.log(authorEmail);
+
+    const {data: isUserVerified = false,isLoading: verifyLoading}=useQuery({
+        queryKey:['isVerified',authorEmail],
+        enabled:!!authorEmail,
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/check-profile-verified`,{
+                params:{email:authorEmail}
+            });
+            return res.data;
+        }
+    });
+    console.log(isUserVerified);
 
 
     const { mutateAsync: handleToggleLike } = useMutation({
@@ -145,7 +160,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         }
     })
 
-    if (isLoading || commentLoading) return <PostCardSkeleton />
+    if (isLoading || commentLoading || verifyLoading) return <PostCardSkeleton />
 
     // console.log(likes);
     console.log(comments);
@@ -199,6 +214,8 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
 
     }
 
+    // console.log(user);
+
     const buttonVariants = {
         initial: { opacity: 0, scale: 0.5 },
         inView: { opacity: 1, scale: 1 }
@@ -214,14 +231,22 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
             <div className="flex justify-between items-start mb-4">
                 {/* Author Info */}
                 <div className="flex items-center">
-                    <motion.img
-                        initial={{ opacity: 0, scale: 0.90 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        src={post?.author?.photoURL}
-                        alt={post?.author?.name}
-                        className="w-10 h-10 rounded-full object-cover border border-[#DADCE0] dark:border-[#374151]"
-                    />
+                    <div className="relative">
+                        <motion.img
+                            initial={{ opacity: 0, scale: 0.90 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
+                            src={post?.author?.photoURL}
+                            alt={post?.author?.name}
+                            className="w-10 h-10 rounded-full object-cover border border-[#DADCE0] dark:border-[#374151]"
+                        />
+
+                        {/* compare verification from server here */}
+                        {
+                            isUserVerified && <span className="text-blue-500 absolute -right-1 -bottom-1"><VscVerifiedFilled size={20} /></span>
+                        }
+
+                    </div>
                     <div className="ml-3">
                         <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                             {post?.author?.name}

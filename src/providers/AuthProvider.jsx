@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword, deleteUser, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, deleteUser, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updateProfile } from 'firebase/auth';
 import { AuthContext } from '../contexts/AuthContext';
 import { auth } from '../firebase/firebase.init';
 
@@ -51,15 +51,23 @@ const AuthProvider = ({ children }) => {
     }
 
 
-    const deleteUserFirebase = ()=> {
+    const deleteUserFirebase = () => {
         setLoading(true);
         return deleteUser(auth.currentUser)
     }
 
 
-    const googleLogin = ()=> {
+    const googleLogin = () => {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth,provider);
+        return signInWithPopup(auth, provider);
+    }
+
+    const verifyEmail = () => {
+        return sendEmailVerification(auth.currentUser);
+    }
+
+    const changePassword = (email) => {
+        return sendPasswordResetEmail(auth, email);
     }
 
 
@@ -72,7 +80,10 @@ const AuthProvider = ({ children }) => {
         setUserProfile,
         userLogOut,
         deleteUserFirebase,
-        googleLogin
+        googleLogin,
+        verifyEmail,
+        setLoading,
+        changePassword
     }
 
     return <AuthContext value={contextValue}>

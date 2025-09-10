@@ -17,6 +17,7 @@ const Profile = () => {
     const [showPostInput, setShowPostInput] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const profile = true;
+    console.log(user);
 
     const [page, setPage] = useState(1);
     const limit = 10;
@@ -196,9 +197,12 @@ const Profile = () => {
 
             {/* User Details */}
             <div className="px-4 md:px-8 pt-20 md:pt-24 pb-6">
-                <h2 className="text-2xl md:text-3xl font-bold text-[#202124] dark:text-[#F9FAFB]">
-                    {user?.displayName || 'User'}
-                </h2>
+                <div className='flex items-center gap-2'>
+                    <h2 className="text-2xl md:text-3xl font-bold text-[#202124] dark:text-[#F9FAFB]">
+                        {user?.displayName || 'User'}
+                    </h2>
+                    <span className={`${user?.emailVerified ? 'text-blue-500' : 'text-[#F9AB00]'} text-base font-bold`}>({user?.emailVerified ? 'Verified': 'Not Verified'})</span>
+                </div>
                 <p className="text-base text-[#5F6368] dark:text-[#D1D5DB] mt-1">
                     {user?.email}
                 </p>
