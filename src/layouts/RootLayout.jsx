@@ -12,7 +12,7 @@ const RootLayout = () => {
                 <div className='sticky top-0 z-[50]'>
                     <Navbar />
                 </div>
-                <section>
+                <section className=''>
                     <Outlet />
                 </section>
                 <footer>

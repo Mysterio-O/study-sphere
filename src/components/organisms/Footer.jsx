@@ -9,9 +9,49 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router';
 import logo from '../../assets/logo.webp';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import { useMutation } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
+
+    const axiosPublic = useAxiosPublic();
+
+    const { mutateAsync: subscribe, isPending } = useMutation({
+        mutationKey: ['subscribe'],
+        mutationFn: async (email) => {
+            const res = await axiosPublic.post(`/subscribe?email=${email}`);
+            return res.data
+        },
+        onSuccess: () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Subscribed',
+                text: 'You subscribed successfully',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        setEmail('');
+        },
+        onError: (err) => {
+            Swal.fire({
+                title: 'Subscribe Failed',
+                text: err.message,
+                icon: 'error',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
+        }
+    })
 
     const palette = {
         primary: '#4285F4', // Google Blue
@@ -28,7 +68,7 @@ const Footer = () => {
     const handleSubscribe = (e) => {
         e.preventDefault();
         console.log('subscribe:', email);
-        setEmail('');
+        subscribe(email);
     };
 
     const year = new Date().getFullYear();
@@ -140,7 +180,8 @@ const Footer = () => {
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 type="submit"
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-white font-medium"
+                                disabled={isPending}
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-md text-white font-medium ${isPending ? 'animate-pulse' : ''}`}
                                 style={{ backgroundColor: palette.primary }}
                             >
                                 Subscribe

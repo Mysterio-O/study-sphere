@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 
 const PostCardSkeleton = ({ count = 5 }) => {
     return (
-        <div className="py-28">
+        <div className="py-28 w-full">
             <div className="px-10 flex flex-col gap-6">
                 {Array.from({ length: count }).map((_, index) => (
                     <motion.div

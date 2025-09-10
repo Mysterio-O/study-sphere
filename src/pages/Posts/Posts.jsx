@@ -23,11 +23,36 @@ const Posts = () => {
         enabled: !!user?.email
     });
 
-    if(isLoading) return <PostCardSkeleton />
+    if (isLoading) return <PostCardSkeleton />
 
 
     console.log(postData);
     const { posts = [], totalPages = 1 } = postData;
+
+    if (posts.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center text-gray-600 dark:text-gray-300">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-14 w-14 text-gray-400 dark:text-gray-500 mb-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M7.5 8.25h9m-9 3.75h9m-9 3.75h9M4.5 6.75h15a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-15A2.25 2.25 0 012.25 18V9a2.25 2.25 0 012.25-2.25z"
+                    />
+                </svg>
+                <h2 className="text-lg font-medium">No posts yet</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    When new posts are added, they’ll appear here.
+                </p>
+            </div>
+        )
+    }
 
     return (
         <div className='py-28'>
