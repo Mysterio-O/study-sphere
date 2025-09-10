@@ -20,12 +20,15 @@ import AboutUs from "../pages/AboutUs/AboutUs";
 import UpdateProfile from "../components/Dashboard/SettingComponents/UpdateProfile";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import LearningGuide from "../pages/LearningGuide/LearningGuide";
+import Error404 from "../pages/Error/Error404";
+import Error403 from "../pages/Error/Error403";
 
 const router = createBrowserRouter([
     //  main routes
     {
         path: "/",
         Component: RootLayout,
+        errorElement: <Error404 />,
         children: [
             { index: true, Component: Home },
             {
@@ -43,8 +46,12 @@ const router = createBrowserRouter([
                 Component: ContactUs
             },
             {
-                path:'/learning-guide',
+                path: '/learning-guide',
                 Component: LearningGuide
+            },
+            {
+                path: '/forbidden',
+                Component: Error403
             }
         ]
     },
