@@ -212,9 +212,9 @@ const Footer = () => {
                     <p className="text-sm text-[#5F6368] dark:text-[#D1D5DB]">© {year} StudySphere — All rights reserved.</p>
 
                     <div className="flex items-center gap-4">
-                        <Link to="/#" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#4285F4]">Privacy</Link>
-                        <Link to="/#" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#FBBC04]">Terms</Link>
-                        <Link to="/#" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#EA4335]">Cookies</Link>
+                        <Link to="/privacy-policy" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#4285F4]">Privacy</Link>
+                        <Link to="/terms" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#FBBC04]">Terms</Link>
+                        <Link to="/cookies" className="text-sm text-[#5F6368] dark:text-[#D1D5DB] hover:text-[#EA4335]">Cookies</Link>
                     </div>
                 </div>
             </div>

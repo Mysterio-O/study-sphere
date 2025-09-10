@@ -46,6 +46,9 @@
 - **About Us**: Learn about our mission and team  
 - **Contact Us**: Get in touch with our support team  
 - **Learning Guide**: Comprehensive documentation on how to use StudySphere  
+- **Privacy**: Company privacy policies
+- **Terms**: Terms and conditions
+- **Cookies**: Cookie details
 
 ---
 

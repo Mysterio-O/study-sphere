@@ -19,6 +19,24 @@ const navLinks = [
     }
 ];
 
+const userLinks = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'About Us', path: '/about-us' },
+    { name: 'Contact Us', path: '/contact-us' },
+    { name: 'Posts', path: 'posts' },
+    {
+        name: "Learning Guide", path:"/learning-guide"
+    }
+];
+
+const guestLinks = [
+    { name: 'About Us', path: '/about-us' },
+    { name: 'Contact Us', path: '/contact-us' },
+    {
+        name: "Learning Guide", path:"/learning-guide"
+    }
+];
+
 // Animation variants for navbar
 const navVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -166,7 +184,7 @@ function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
-                        {navLinks.map((link) => (
+                        {(user ? userLinks : guestLinks).map((link) => (
                             <motion.span
                                 key={link.name}
                                 variants={navItemVariants}
@@ -213,7 +231,7 @@ function Navbar() {
                             exit="exit"
                             className="md:hidden bg-[#F8F9FA] dark:bg-[#1F2937] px-4 pt-3 pb-4 border-t border-[#DADCE0] dark:border-[#374151]"
                         >
-                            {navLinks.map((link) => (
+                            {(user ? userLinks : guestLinks).map((link) => (
                                 <NavLink
                                     key={link.name}
                                     to={link.path}

@@ -22,9 +22,12 @@ import ContactUs from "../pages/ContactUs/ContactUs";
 import LearningGuide from "../pages/LearningGuide/LearningGuide";
 import Error404 from "../pages/Error/Error404";
 import Error403 from "../pages/Error/Error403";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "../pages/TermsOfService/TermsOfService";
+import CookiesPolicy from "../pages/CookiesPolicy/CookiesPolicy";
 
 const router = createBrowserRouter([
-    //  main routes
+    //  main routess
     {
         path: "/",
         Component: RootLayout,
@@ -52,6 +55,18 @@ const router = createBrowserRouter([
             {
                 path: '/forbidden',
                 Component: Error403
+            },
+            {
+                path: '/privacy-policy',
+                Component: PrivacyPolicy
+            },
+            {
+                path: '/terms',
+                Component: TermsOfService
+            },
+            {
+                path: '/cookies',
+                Component: CookiesPolicy
             }
         ]
     },
