@@ -19,6 +19,7 @@ import Posts from "../pages/Posts/Posts";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import UpdateProfile from "../components/Dashboard/SettingComponents/UpdateProfile";
 import ContactUs from "../pages/ContactUs/ContactUs";
+import LearningGuide from "../pages/LearningGuide/LearningGuide";
 
 const router = createBrowserRouter([
     //  main routes
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: '/contact-us',
                 Component: ContactUs
+            },
+            {
+                path:'/learning-guide',
+                Component: LearningGuide
             }
         ]
     },

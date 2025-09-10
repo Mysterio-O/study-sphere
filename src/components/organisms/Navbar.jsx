@@ -14,6 +14,9 @@ const navLinks = [
     { name: 'About Us', path: '/about-us' },
     { name: 'Contact Us', path: '/contact-us' },
     { name: 'Posts', path: 'posts' },
+    {
+        name: "Learning Guide", path:"/learning-guide"
+    }
 ];
 
 // Animation variants for navbar
