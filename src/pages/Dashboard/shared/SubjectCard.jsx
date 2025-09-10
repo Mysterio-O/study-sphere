@@ -9,7 +9,7 @@ const SubjectCard = ({ subject, handleSubjectChange, showModal, scheduleModal })
 
 
   const handleDelete = async (subjectDetails) => {
-    console.log(subjectDetails);
+    // console.log(subjectDetails);
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -37,7 +37,7 @@ const SubjectCard = ({ subject, handleSubjectChange, showModal, scheduleModal })
   };
 
   const handleSchedule = (subjectDetails) => {
-    console.log(subject);
+    // console.log(subject);
     scheduleModal(subjectDetails)
   };
 

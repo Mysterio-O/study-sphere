@@ -31,7 +31,7 @@ const Overview = () => {
             return res.data;
         },
     });
-    console.log(myQuizProgression);
+    // console.log(myQuizProgression);
 
     const { data: schedules = [], isLoading: scheduleLoading } = useQuery({
         queryKey: ['schedules', user?.email],
@@ -52,7 +52,7 @@ const Overview = () => {
         },
         enabled: !!user?.email,
     });
-    console.log(wallet);
+    // console.log(wallet);
 
     const handleCardCLick = (type) => {
         let filtered = [];

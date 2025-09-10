@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from 'motion/react';
 
 const EditPostModal = ({ post, onClose, onSave, editLoading, setEditLoading }) => {
@@ -14,7 +14,7 @@ const EditPostModal = ({ post, onClose, onSave, editLoading, setEditLoading }) =
             setPreview(URL.createObjectURL(file)); // preview with blob URL
         }
     };
-    console.log(newImage);
+    // console.log(newImage);
     // Save
     const handleSubmit = async () => {
         // console.log('new text', newText);
@@ -36,7 +36,7 @@ const EditPostModal = ({ post, onClose, onSave, editLoading, setEditLoading }) =
 
         if (data.success) {
             newImageUrl = data.data.url;
-            console.log('success->', newImageUrl);
+            // console.log('success->', newImageUrl);
         }
 
         const updatedData = {

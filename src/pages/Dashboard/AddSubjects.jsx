@@ -61,7 +61,7 @@ const AddSubjects = () => {
                 teacherNumber: pair.teacherNumber
             })),
         };
-        console.log(data);
+        // console.log(data);
 
         try {
             const res = await axiosSecure.post(`/add-subjects?email=${user?.email}`, data)

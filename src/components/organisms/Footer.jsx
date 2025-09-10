@@ -67,7 +67,7 @@ const Footer = () => {
 
     const handleSubscribe = (e) => {
         e.preventDefault();
-        console.log('subscribe:', email);
+        // console.log('subscribe:', email);
         subscribe(email);
     };
 

@@ -104,7 +104,7 @@ const SignUp = () => {
                 photoURL: uploadPhotoOnImgbb?.data?.data?.url,
                 deleteURL: uploadPhotoOnImgbb?.data?.data?.delete_url
             }
-            console.log(imageOptions);
+            // console.log(imageOptions);
 
             const userInfo = {
                 username, email, institutionType, institutionName, classGrade, department, year,
@@ -114,7 +114,7 @@ const SignUp = () => {
             // create user with firebase
             createUser(email, password)
                 .then(result => {
-                    console.log("user new account created.", result);
+                    // console.log("user new account created.", result);
 
                     const updateObject = {
                         displayName: username,
@@ -128,7 +128,7 @@ const SignUp = () => {
 
                             // upload user info in the server
                             const res = await axiosPublic.post('/create-user', userInfo)
-                            console.log(res.data);
+                            // console.log(res.data);
                             if (res?.data?.insertedId) {
                                 Swal.fire({
                                     icon: 'success',

@@ -56,7 +56,7 @@ const ScheduleModal = ({ subject, setScheduleInView, handleAddSchedule }) => {
             time: `${formData.startTime}-${formData.endTime}`
         }));
 
-        console.log(scheduleData);
+        // console.log(scheduleData);
         handleAddSchedule(scheduleData);
         setScheduleInView(false);
     };

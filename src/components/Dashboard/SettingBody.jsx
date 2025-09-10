@@ -29,7 +29,7 @@ const SettingBody = () => {
             return res.data;
         }
     });
-    console.log(isUserVerified);
+    // console.log(isUserVerified);
 
     const { mutateAsync: verifyEmailOnDatabase } = useMutation({
         mutationKey: ['verify-email', user?.email],

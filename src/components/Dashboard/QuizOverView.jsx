@@ -6,7 +6,7 @@ const QuizOverView = ({ myQuizProgression, onCardClick  }) => {
     const { totalCorrectAnswers, totalQuestionSolved } = myQuizProgression;
     const { easy = { solved: 0, correct: 0 }, medium = { solved: 0, correct: 0 }, hard = { solved: 0, correct: 0 } } = difficulties || {};
 
-    console.log(myQuizProgression);
+    // console.log(myQuizProgression);
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center place-content-center w-full">

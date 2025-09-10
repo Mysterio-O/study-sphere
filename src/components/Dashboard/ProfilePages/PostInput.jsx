@@ -61,7 +61,7 @@ const PostInput = ({ onPostSubmit }) => {
         image: imageUrl,
         createdAt: new Date().toISOString(),
       };
-      console.log(postData);
+      // console.log(postData);
 
       if (onPostSubmit) {
          onPostSubmit(postData);

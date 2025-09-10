@@ -34,7 +34,7 @@ const SignIn = () => {
         if (email && password) {
             loginUser(email, password)
                 .then(result => {
-                    console.log('user logged in', result);
+                    // console.log('user logged in', result);
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',

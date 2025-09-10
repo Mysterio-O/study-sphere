@@ -139,10 +139,32 @@ const MySubjects = () => {
         },
         enabled: !!user?.email,
         onSuccess: (data) => {
-            console.log(data);
+            // console.log(data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Added',
+                text: 'Schedule added successfully',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
         },
         onError: (error) => {
-            console.log("error adding schedule", error);
+            // console.log("error adding schedule", error);
+            Swal.fire({
+                title: 'Failed',
+                text: error.message,
+                icon: 'error',
+                customClass: {
+                    popup: 'swal-container', // Target .swal2-popup
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text', // Target .swal2-html-container
+                    confirmButton: 'swal-confirm-button'
+                }
+            });
         }
     })
 
@@ -156,7 +178,7 @@ const MySubjects = () => {
     // console.log(modalInView);
 
     const scheduleModal = (subjectDetails) => {
-        console.log(subjectDetails);
+        // console.log(subjectDetails);
         if (subjectDetails) {
             setScheduleInView(true);
             setSubject(subjectDetails)

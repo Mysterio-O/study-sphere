@@ -52,7 +52,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
             return res.data;
         }
     });
-    console.log(isUserVerified);
+    // console.log(isUserVerified);
 
 
     const { mutateAsync: handleToggleLike } = useMutation({
@@ -64,7 +64,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['like', post._id])
-            console.log(data);
+            // console.log(data);
         },
         onError: (err) => {
             console.error(err);
@@ -107,7 +107,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
             return res.data
         },
         onSuccess: () => {
-            console.log("commented");
+            // console.log("commented");
             queryClient.invalidateQueries(['comments', post?._id])
             setNewComment("");
         },
@@ -121,7 +121,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         mutationKey: ['comments', post?._id],
         enabled: !!post?._id,
         mutationFn: async (commentData) => {
-            console.log(commentData);
+            // console.log(commentData);
             const res = await axiosSecure.patch(`/edit-comment?postId=${post?._id}`, commentData);
             return res.data;
         },
@@ -163,11 +163,11 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
     if (isLoading || commentLoading || verifyLoading) return <PostCardSkeleton />
 
     // console.log(likes);
-    console.log(comments);
+    // console.log(comments);
 
     const alreadyLikedByCurrentUser = likes?.includes(user?.email) || false;
     const totalLikes = likes?.length || 0;
-    console.log(alreadyLikedByCurrentUser, totalLikes);
+    // console.log(alreadyLikedByCurrentUser, totalLikes);
 
     // Add comment
     const handleAddComment = () => {
@@ -180,7 +180,7 @@ const PostCard = ({ post, onEdit, onDelete, editLoading, setEditLoading, profile
         if (comment?.text?.length > 0 && user?.displayName && user?.email) {
             postComment(comment)
         }
-        console.log(comment);
+        // console.log(comment);
     };
 
     // Save edits

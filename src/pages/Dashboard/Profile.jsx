@@ -17,7 +17,7 @@ const Profile = () => {
     const [showPostInput, setShowPostInput] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const profile = true;
-    console.log(user);
+    // console.log(user);
 
     const [page, setPage] = useState(1);
     const limit = 10;
@@ -138,7 +138,7 @@ const Profile = () => {
         enabled: !!user?.email,
         mutationFn: async (data) => {
             const res = await axiosSecure.patch(`/update-post?email=${user?.email}`, { data });
-            console.log(res);
+            // console.log(res);
             return res.data;
         },
         onSuccess: () => {
@@ -174,7 +174,7 @@ const Profile = () => {
 
     const posts = data?.posts || [];
     const totalPages = data?.totalPages || 1;
-    console.log(posts);
+    // console.log(posts);
 
     if (coverLoading || postLoading) return <ProfileSkeleton />
 

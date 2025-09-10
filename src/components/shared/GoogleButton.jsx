@@ -16,7 +16,7 @@ const GoogleButton = ({ register }) => {
         setLoading(true);
         googleLogin()
             .then(async (result) => {
-                console.log("user signed in with google", result);
+                // console.log("user signed in with google", result);
                 navigate('/');
                 Swal.fire({
                     title: 'Google Login Successful',

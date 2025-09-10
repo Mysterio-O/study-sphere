@@ -52,7 +52,7 @@ const WalletCharts = ({ wallet }) => {
         currentBalance = totalIncome - totalExpense;
     } else {
         const dueAmount = totalIncome - totalExpense;
-        console.log(dueAmount);
+        // console.log(dueAmount);
         balanceWarning = dueAmount;
     }
 

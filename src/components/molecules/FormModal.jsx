@@ -29,7 +29,7 @@ const FormModal = ({ subject, setModalInView, handleUpdateSubject }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // keep your submit logic here
-        console.log("Updated data:",subject, formData);
+        // console.log("Updated data:",subject, formData);
         const isSame = 
         subject.subjectName === formData.subjectName &&
         subject.teacherName === formData.teacherName &&
@@ -54,7 +54,7 @@ const FormModal = ({ subject, setModalInView, handleUpdateSubject }) => {
             oldData:subject,
             newData:formData
         }
-        console.log(newData);
+        // console.log(newData);
         handleUpdateSubject(newData);
     };
 

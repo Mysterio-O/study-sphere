@@ -8,17 +8,6 @@ import Button from '../atoms/Button';
 import Swal from 'sweetalert2';
 import LogoutButton from '../../shared/LogoutButton';
 
-// Navigation links for Navbar
-const navLinks = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'About Us', path: '/about-us' },
-    { name: 'Contact Us', path: '/contact-us' },
-    { name: 'Posts', path: 'posts' },
-    {
-        name: "Learning Guide", path:"/learning-guide"
-    }
-];
-
 const userLinks = [
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'About Us', path: '/about-us' },

@@ -15,7 +15,7 @@ const CommentCard = ({ comment, onEdit, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.text);
     const {user}=useAuth();
-    console.log(comment?.authorEmail);
+    // console.log(comment?.authorEmail);
 
     // delete with swal confirm
     const handleDelete = (id) => {
@@ -43,7 +43,7 @@ const CommentCard = ({ comment, onEdit, onDelete }) => {
 
     const handleSaveEdit = (id) => {
         if (editedText.trim().length === 0) return;
-        console.log({ editedText, id });
+        // console.log({ editedText, id });
         onEdit({ editedText, id })
         setIsEditing(false);
     };

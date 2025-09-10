@@ -26,7 +26,7 @@ const Posts = () => {
     if (isLoading) return <PostCardSkeleton />
 
 
-    console.log(postData);
+    // console.log(postData);
     const { posts = [], totalPages = 1 } = postData;
 
     if (posts.length === 0) {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosPublic = axios.create({
-    baseURL: `http://localhost:3000` // Change this to your public API base URL
+    baseURL: `https://studysphere-server.vercel.app` // Change this to your public API base URL
 });
 
 const useAxiosPublic = () => {
@@ -9,5 +9,3 @@ const useAxiosPublic = () => {
 };
 
 export default useAxiosPublic;
-
-// http://localhost:3000

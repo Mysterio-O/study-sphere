@@ -51,7 +51,7 @@ const ContactUs = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Contact form submitted:', formData);
+        // console.log('Contact form submitted:', formData);
         handleContact(formData)
     };
 
