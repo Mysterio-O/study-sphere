@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router';
 import useAuth from '../hooks/useAuth';
+import Loader from '../components/Loader/Loader';
 // This component is used to protect routes that require authentication
 const PrivateRoute = ({ children }) => {
 
@@ -10,7 +11,7 @@ const PrivateRoute = ({ children }) => {
     const from = location?.pathname;
 
     if (loading) {
-        return "Loading..."; // You can replace this with a custom loader component
+        return <Loader />
     }
 
     if (!user) {
