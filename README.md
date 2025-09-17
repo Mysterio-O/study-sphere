@@ -5,6 +5,8 @@
 **StudySphere** is a comprehensive web application designed to help students manage their academic life efficiently. From organizing study schedules to generating practice questions and tracking expenses, StudySphere provides all the tools a student needs in one platform.  
 
 ---
+[Live](https://studysphere-mysterio.netlify.app)
+[server repo](https://github.com/Mysterio-O/study-sphere-server)
 
 ## 📑 Table of Contents  
 
